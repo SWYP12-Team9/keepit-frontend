@@ -1,21 +1,21 @@
 import { cn } from '@/src/utils/cn'
 
-export interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {
+interface TextAreaProps extends React.TextareaHTMLAttributes<HTMLTextAreaElement> {
   className?: string
   width?: string
   height?: string
 }
 
-export function Input({
+export function TextArea({
   className,
   width = 'w-full',
   height,
   ...props
-}: InputProps) {
+}: TextAreaProps) {
   return (
-    <input
+    <textarea
       className={cn(
-        'rounded-8 placeholder:text-gray-muted bg-gray-field text-gray-default text-caption-1 px-20 py-14',
+        'rounded-8 placeholder:text-gray-muted text-gray-default text-caption-1 resize-none bg-[#F2F2F2] px-20 py-14',
         width,
         height,
         className,
