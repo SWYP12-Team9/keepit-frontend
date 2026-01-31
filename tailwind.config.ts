@@ -1,7 +1,11 @@
 import type { Config } from 'tailwindcss'
 
+// eslint-disable-next-line @typescript-eslint/no-require-imports
+const pxToRem = require('tailwindcss-preset-px-to-rem')
+
 const tailwindConfig: Config = {
   content: ['./src/**/*.{js,ts,jsx,tsx,mdx}'],
+  presets: [pxToRem],
   theme: {
     fontFamily: {
       sans: ['var(--font-pretendard)', 'system-ui', 'sans-serif'],
@@ -19,7 +23,10 @@ const tailwindConfig: Config = {
             hover: '#565ac8',
             active: '#4d50b2',
           },
-          dark: '#484ba7',
+          dark: {
+            DEFAULT: '#484ba7',
+            hover: '#3A3C85',
+          },
         },
         gray: {
           white: '#ffffff',

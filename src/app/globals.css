@@ -1,3 +1,12 @@
 @import 'tailwindcss';
 
 @config '../../tailwind.config.ts';
+
+@layer utilities {
+  .scrollbar-hide {
+    scrollbar-width: none;
+  }
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none;
+  }
+}
