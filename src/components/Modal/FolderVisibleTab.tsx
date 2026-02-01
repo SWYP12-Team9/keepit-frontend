@@ -9,11 +9,11 @@ export function FolderVisibleTab({
   setIsPublic,
 }: FolderVisibleTabProps) {
   return (
-    <div className="bg-gray-field rounded-40 flex w-max p-1">
+    <div className="bg-gray-field rounded-40 ml-auto flex w-max p-1">
       <button
         onClick={() => setIsPublic(true)}
         className={cn(
-          'rounded-40 text-body-1 text-gray-default px-40 py-12 transition-all',
+          'rounded-40 text-caption-1 text-gray-default px-28 py-9 transition-all',
           isPublic ? 'z-10 bg-white' : 'bg-gray-field text-gray-muted z-0',
         )}
       >
@@ -22,7 +22,7 @@ export function FolderVisibleTab({
       <button
         onClick={() => setIsPublic(false)}
         className={cn(
-          'rounded-40 text-body-1 text-gray-default px-40 py-12 transition-all',
+          'rounded-40 text-caption-1 text-gray-default px-28 py-9 transition-all',
           '-ml-14',
           !isPublic ? 'z-10 bg-white' : 'bg-gray-field text-gray-muted z-0',
         )}
