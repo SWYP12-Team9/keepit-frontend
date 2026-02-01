@@ -50,7 +50,7 @@ const tailwindConfig: Config = {
         'body-1': ['16px', { lineHeight: '24px', fontWeight: '600' }],
         'body-2': ['16px', { lineHeight: '24px', fontWeight: '500' }],
         'body-3': ['14px', { lineHeight: '22px', fontWeight: '600' }],
-        'body-4': ['14px', { lineHeight: '12px', fontWeight: '500' }],
+        'body-4': ['14px', { lineHeight: '22px', fontWeight: '500' }],
         'caption-1': ['12px', { lineHeight: '18px', fontWeight: '500' }],
         'caption-2': ['11px', { lineHeight: '16px', fontWeight: '500' }],
       },
