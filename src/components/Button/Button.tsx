@@ -26,7 +26,7 @@ export function Button({
   return (
     <button
       className={cn(
-        'text-body-4 text-gray-default rounded-8',
+        'text-body-4 text-gray-default rounded-8 cursor-pointer',
         width,
         height,
         variantStyles[variant],

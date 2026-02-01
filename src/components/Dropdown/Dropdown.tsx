@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { ReactNode, useState } from 'react'
 import { cn } from '@/src/utils/cn'
 import { DropdownTrigger } from './DropdownTrigger'
 import { DropdownOption } from './types'
@@ -13,6 +13,7 @@ export interface DropdownProps {
   onChange: (option: DropdownOption) => void
   placeholder?: string
   className?: string
+  footerButton?: (close: () => void) => ReactNode
 }
 
 export function Dropdown({
@@ -21,12 +22,15 @@ export function Dropdown({
   onChange,
   placeholder = '',
   className,
+  footerButton,
 }: DropdownProps) {
   const [isOpen, setIsOpen] = useState(false)
 
+  const closeDropdown = () => setIsOpen(false)
+
   const handleSelect = (option: DropdownOption) => {
     onChange(option)
-    setIsOpen(false)
+    closeDropdown()
   }
 
   const displayLabel = value?.title || placeholder
@@ -50,6 +54,8 @@ export function Dropdown({
               onSelect={handleSelect}
             />
           ))}
+
+          {footerButton && footerButton(closeDropdown)}
         </DropdownMenu>
       )}
     </div>
