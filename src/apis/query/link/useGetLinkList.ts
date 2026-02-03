@@ -1,10 +1,13 @@
 import { useQuery } from '@tanstack/react-query'
-import { requestGetLinkList } from '../../request/requestGetLinkList'
+import {
+  requestGetLinkList,
+  RequestGetLinkListParams,
+} from '../../request/requestGetLinkList'
 import { linkKeys } from './linkKeys'
 
-export const useGetLinkList = () => {
+export const useGetLinkList = ({ referenceId }: RequestGetLinkListParams) => {
   return useQuery({
-    queryKey: linkKeys.list(),
-    queryFn: () => requestGetLinkList({}),
+    queryKey: linkKeys.list(referenceId),
+    queryFn: () => requestGetLinkList({ referenceId }),
   })
 }
