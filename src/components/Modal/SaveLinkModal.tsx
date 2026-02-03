@@ -13,12 +13,16 @@ import { useSaveLinkModalStore } from '@/src/store/saveLinkModalStore'
 import { useGetReferenceList } from '@/src/apis/query/reference/useGetReferenceList'
 import { ReferenceItem } from '@/src/types/reference/reference'
 import { useEffect } from 'react'
+import { useSaveLinkMutation } from '@/src/apis/query/link/useSaveLinkMutation'
+import { buildSaveLinkPayload } from '@/src/utils/buildSaveLinkPayload'
+import { saveLinkRequestSchema } from '@/src/schemas/saveLinkFormSchema'
 
 export function SaveLinkModal() {
   const isModalOpen = useSaveLinkModalStore((state) => state.isOpen)
   const close = useSaveLinkModalStore((state) => state.close)
   const urlValue = useSaveLinkModalStore((state) => state.url)
 
+  const { mutateAsync: saveLink } = useSaveLinkMutation()
   const { data: referenceList } = useGetReferenceList({ type: 'all' })
 
   const dropdownOptions = referenceList?.data?.contents.map(
@@ -51,7 +55,14 @@ export function SaveLinkModal() {
 
   const isCreateMode = selectedFolder?.id === 'create-folder'
 
-  const onSubmit = () => {}
+  const onSubmit = async (data: SaveLinkFormData) => {
+    const payload = buildSaveLinkPayload(data)
+    const validatedPayload = saveLinkRequestSchema.parse(payload)
+
+    await saveLink(validatedPayload)
+    close()
+    reset()
+  }
 
   return (
     <Modal isOpen={isModalOpen} width="w-400" className="flex flex-col gap-20">
