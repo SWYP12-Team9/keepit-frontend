@@ -1,11 +1,10 @@
 import { Input } from '@/src/components/Input'
 import { useSaveLinkModalStore } from '@/src/store/saveLinkModalStore'
 import Image from 'next/image'
-import { useState } from 'react'
 
 export function SaveLinkInput() {
-  const [url, setUrl] = useState('')
-
+  const url = useSaveLinkModalStore((state) => state.url)
+  const setUrl = useSaveLinkModalStore((state) => state.setUrl)
   const openSaveLinkModal = useSaveLinkModalStore((state) => state.open)
 
   return (
@@ -14,6 +13,7 @@ export function SaveLinkInput() {
         className="rounded-20 text-body-1 px-40"
         height="h-100"
         placeholder="다시 쓰고 싶은 링크를 넣어 보세요"
+        value={url}
         onChange={(e) => setUrl(e.target.value)}
       />
       <Image
