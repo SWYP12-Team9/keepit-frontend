@@ -13,6 +13,7 @@ interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
 const variantStyles: Record<ButtonVariant, string> = {
   primary: 'bg-blue-light-active',
   secondary: 'bg-gray-field',
+  tertiary: 'bg-blue-normal',
 }
 
 export function Button({
