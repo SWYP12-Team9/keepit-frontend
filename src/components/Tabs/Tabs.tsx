@@ -5,6 +5,7 @@ import { TabItem } from './TabItem'
 import { Tab, TabVariant } from './types'
 
 export interface TabsProps {
+  defaultTap: Tab
   tabs?: Tab[]
   selectedTab: Tab | null
   onChange: (tab: Tab) => void
@@ -13,14 +14,13 @@ export interface TabsProps {
 }
 
 export function Tabs({
+  defaultTap,
   tabs = [],
   selectedTab,
   onChange,
   className = '',
 }: TabsProps) {
-  const allTab: Tab = { id: 'all', title: '전체' }
-
-  const tabList = [allTab, ...tabs]
+  const tabList = [defaultTap, ...tabs]
 
   return (
     <div
