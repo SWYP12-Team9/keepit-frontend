@@ -2,11 +2,12 @@
 
 import { requestGetHome } from '@/src/apis/request/requestGetHome'
 import { Tab, Tabs } from '@/src/components/Tabs'
+import { ALL_TAB } from '@/src/constants/defaultTap'
 import { useEffect, useState } from 'react'
 
 export default function TabsTest() {
   const [tabs, setTabs] = useState<Tab[]>([])
-  const [selectedTab, setSelectedTab] = useState<Tab | null>(null)
+  const [selectedTab, setSelectedTab] = useState<Tab | null>(ALL_TAB)
 
   useEffect(() => {
     ;(async () => {
@@ -20,6 +21,11 @@ export default function TabsTest() {
   }
 
   return (
-    <Tabs tabs={tabs} selectedTab={selectedTab} onChange={handleTabChange} />
+    <Tabs
+      defaultTap={ALL_TAB}
+      tabs={tabs}
+      selectedTab={selectedTab}
+      onChange={handleTabChange}
+    />
   )
 }
