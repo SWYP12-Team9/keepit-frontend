@@ -1,3 +1,4 @@
+import { useDeleteLinkMutation } from '@/src/apis/query/link/useDeleteLinkMutation'
 import { MyLinkCard } from '@/src/components/LinkCard'
 import { LinkItem } from '@/src/types/link/link'
 import Image from 'next/image'
@@ -11,8 +12,10 @@ export function LinkListContainer({
   linkList,
   isLoading,
 }: LinkListContainerProps) {
-  const handleDelete = (id: number) => {
-    console.log('선택 id:', id)
+  const { mutateAsync: deleteLink } = useDeleteLinkMutation()
+
+  const handleDelete = async (id: number) => {
+    await deleteLink(id)
   }
 
   return isLoading ? (
