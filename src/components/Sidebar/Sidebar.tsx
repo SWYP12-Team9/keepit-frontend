@@ -1,5 +1,6 @@
 'use client'
 
+import { useDrawerStore } from '@/src/store/drawerStore'
 import { cn } from '@/src/utils/cn'
 import { NavExplore, NavHome, NavMypage, NavRef } from '../Icon'
 import { SidebarFooter } from './SidebarFooter'
@@ -7,7 +8,6 @@ import SidebarLogo from './SidebarLogo'
 import SidebarNav from './SidebarNav'
 import SidebarProfile from './SidebarProfile'
 import SidebarReferenceListList from './SidebarReferenceList'
-import { useDrawerStore } from '@/src/store/drawerStore'
 
 const navItems = [
   { icon: NavHome, label: '홈', href: '/' },

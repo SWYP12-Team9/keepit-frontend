@@ -1,5 +1,6 @@
 'use client'
 
+import { useAuthStore } from '@/src/store/authStore'
 import { cn } from '@/src/utils/cn'
 
 interface SidebarReference {
@@ -32,32 +33,40 @@ const TAG_DATA: SidebarReference[] = [
 export default function SidebarReferenceList({
   isExpanded,
 }: SidebarReferenceListProps) {
+  const { isLoggedIn } = useAuthStore()
+
   if (!isExpanded) return null
 
   return (
-    <div className="mt-12 flex max-h-236 flex-col px-[30px]">
-      <span className="text-caption-1 text-gray-disabled mb-[15px] -ml-[10px]">
+    <div className="mt-12 flex max-h-236 flex-col pl-[22px]">
+      <span className="text-caption-1 text-gray-disabled mb-[15px]">
         자주 찾는 레퍼런스
       </span>
 
       <div
         className={cn(
           'custom-scrollbar flex flex-col overflow-x-hidden overflow-y-auto',
-          'pb- gap-8 pb-8',
+          'gap-8 pb-8',
         )}
       >
-        {TAG_DATA.map((tag, idx) => (
-          <div
-            key={`${tag.label}-${idx}`}
-            className="group flex cursor-pointer items-center gap-5 py-4"
-          >
+        {isLoggedIn ? (
+          TAG_DATA.map((tag, idx) => (
             <div
-              className="h-[12px] w-[12px] flex-shrink-0 rounded-[2px]"
-              style={{ backgroundColor: tag.color }}
-            />
-            <span className="text-body-4 text-gray-default">{tag.label}</span>
-          </div>
-        ))}
+              key={`${tag.label}-${idx}`}
+              className="group flex cursor-pointer items-center gap-5 py-4"
+            >
+              <div
+                className="h-[12px] w-[12px] flex-shrink-0 rounded-[2px]"
+                style={{ backgroundColor: tag.color }}
+              />
+              <span className="text-body-4 text-gray-default">{tag.label}</span>
+            </div>
+          ))
+        ) : (
+          <p className="text-body-3 text-gray-default">
+            로그인하고 링크를 저장해보세요
+          </p>
+        )}
       </div>
     </div>
   )
