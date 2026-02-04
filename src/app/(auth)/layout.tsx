@@ -9,7 +9,7 @@ export default function AuthLayout({
 }) {
   return (
     <div className="bg-blue-light flex h-screen">
-      <Sidebar isExpanded={true} />
+      <Sidebar />
 
       <main className="relative flex flex-1 pt-24">
         <div className="rounded-tl-20 flex flex-1 flex-col bg-white">
