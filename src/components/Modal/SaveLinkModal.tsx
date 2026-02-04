@@ -15,7 +15,11 @@ import { ReferenceItem } from '@/src/types/reference/reference'
 import { useEffect } from 'react'
 import { useSaveLinkMutation } from '@/src/apis/query/link/useSaveLinkMutation'
 import { buildSaveLinkPayload } from '@/src/utils/buildSaveLinkPayload'
-import { saveLinkRequestSchema } from '@/src/schemas/saveLinkFormSchema'
+import {
+  saveLinkFormSchema,
+  saveLinkRequestSchema,
+} from '@/src/schemas/saveLinkFormSchema'
+import { zodResolver } from '@hookform/resolvers/zod'
 
 export function SaveLinkModal() {
   const isModalOpen = useSaveLinkModalStore((state) => state.isOpen)
@@ -32,17 +36,25 @@ export function SaveLinkModal() {
     }),
   )
 
-  const { reset, control, register, setValue, handleSubmit } =
-    useForm<SaveLinkFormData>({
-      defaultValues: {
-        why: '',
-        url: '',
-        selectedFolder: null,
-        newFolder: '',
-        colorCode: '',
-        memo: '',
-      },
-    })
+  const {
+    reset,
+    control,
+    register,
+    setValue,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<SaveLinkFormData>({
+    defaultValues: {
+      why: '',
+      url: '',
+      selectedFolder: null,
+      newFolder: '',
+      colorCode: '',
+      memo: '',
+    },
+    mode: 'onSubmit',
+    resolver: zodResolver(saveLinkFormSchema),
+  })
 
   useEffect(() => {
     if (isModalOpen) setValue('url', urlValue)
@@ -57,9 +69,12 @@ export function SaveLinkModal() {
 
   const onSubmit = async (data: SaveLinkFormData) => {
     const payload = buildSaveLinkPayload(data)
-    const validatedPayload = saveLinkRequestSchema.parse(payload)
+    const validatedPayload = saveLinkRequestSchema.safeParse(payload)
 
-    await saveLink(validatedPayload)
+    if (validatedPayload.success) {
+      await saveLink(validatedPayload.data)
+    }
+
     close()
     reset()
   }
@@ -76,6 +91,9 @@ export function SaveLinkModal() {
       <div className="flex flex-col gap-12">
         <label className="text-body-1 text-gray-default">링크</label>
         <Input placeholder="링크를 입력해 주세요" {...register('url')} />
+        {errors.url && (
+          <p className="text-caption-1 text-red-500">{errors.url.message}</p>
+        )}
       </div>
 
       {/* 레퍼런스 폴더 선택 */}
@@ -123,6 +141,11 @@ export function SaveLinkModal() {
               placeholder="레퍼런스 폴더 이름을 입력해 주세요"
               {...register('newFolder')}
             />
+            {errors.newFolder && (
+              <p className="text-caption-1 text-red-500">
+                {errors.newFolder.message}
+              </p>
+            )}
           </div>
 
           {/* 색상 선택 */}
@@ -139,6 +162,11 @@ export function SaveLinkModal() {
                 />
               )}
             />
+            {errors.colorCode && (
+              <p className="text-caption-1 text-red-500">
+                {errors.colorCode.message}
+              </p>
+            )}
           </div>
         </>
       )}
@@ -151,6 +179,9 @@ export function SaveLinkModal() {
           placeholder="메모를 입력하세요(선택)"
           {...register('memo')}
         />
+        {errors.memo && (
+          <p className="text-caption-1 text-red-500">{errors.memo.message}</p>
+        )}
       </div>
 
       <div className="mt-10 flex justify-end gap-20">
