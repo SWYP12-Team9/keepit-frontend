@@ -9,6 +9,7 @@ import { Field } from './Field'
 
 interface DrawerProps {
   onClose: () => void
+  onMoveLinkModalOpen: () => void
   categoryColor: string
   categoryName: string
   viewCount: number
@@ -21,6 +22,7 @@ interface DrawerProps {
 
 export function Drawer({
   onClose,
+  onMoveLinkModalOpen,
   categoryColor,
   categoryName,
   viewCount,
@@ -127,8 +129,9 @@ export function Drawer({
           width="w-full"
           height="h-54"
           className="text-gray-default bg-blue-light-active"
+          onClick={onMoveLinkModalOpen}
         >
-          레퍼런스 폴더 수정
+          레퍼런스 폴더 이동
         </Button>
       </div>
     </div>
