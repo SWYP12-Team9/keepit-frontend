@@ -1,3 +1,5 @@
+'use client'
+
 import { cn } from '@/src/utils/cn'
 import { NavExplore, NavHome, NavMypage, NavRef } from '../Icon'
 import { SidebarFooter } from './SidebarFooter'
@@ -5,18 +7,18 @@ import SidebarLogo from './SidebarLogo'
 import SidebarNav from './SidebarNav'
 import SidebarProfile from './SidebarProfile'
 import SidebarReferenceListList from './SidebarReferenceList'
+import { useDrawerStore } from '@/src/store/drawerStore'
 
-interface SidebarProps {
-  isExpanded: boolean
-}
+const navItems = [
+  { icon: NavHome, label: '홈', href: '/' },
+  { icon: NavExplore, label: '탐색', href: '/explore' },
+  { icon: NavRef, label: '레퍼런스', href: '/reference' },
+  { icon: NavMypage, label: '마이페이지', href: '/mypage' },
+]
 
-export function Sidebar({ isExpanded }: SidebarProps) {
-  const navItems = [
-    { icon: NavHome, label: '홈', href: '/' },
-    { icon: NavExplore, label: '탐색', href: '/explore' },
-    { icon: NavRef, label: '레퍼런스', href: '/reference' },
-    { icon: NavMypage, label: '마이페이지', href: '/mypage' },
-  ]
+export function Sidebar() {
+  const isDrawerOpen = useDrawerStore((state) => state.isOpen)
+  const isExpanded = !isDrawerOpen
 
   return (
     <aside

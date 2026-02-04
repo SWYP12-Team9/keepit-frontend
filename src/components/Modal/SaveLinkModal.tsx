@@ -2,32 +2,48 @@
 
 import { Button } from '@/src/components/Button'
 import { ColorPicker } from '@/src/components/ColorPicker'
-import { Dropdown, DropdownOption } from '@/src/components/Dropdown'
+import { Dropdown } from '@/src/components/Dropdown'
 import { Input } from '@/src/components/Input'
 import { Modal } from '@/src/components/Modal'
 import { TextArea } from '@/src/components/TextArea'
 import { COLOR_OPTIONS } from '@/src/constants/colorOptions'
-import { Controller, FieldValues, useForm, useWatch } from 'react-hook-form'
+import { Controller, useForm, useWatch } from 'react-hook-form'
 import { SaveLinkFormData } from './types'
+import { useSaveLinkModalStore } from '@/src/store/saveLinkModalStore'
+import { useGetReferenceList } from '@/src/apis/query/reference/useGetReferenceList'
+import { ReferenceItem } from '@/src/types/reference/reference'
+import { useEffect } from 'react'
+import { useSaveLinkMutation } from '@/src/apis/query/link/useSaveLinkMutation'
+import { buildSaveLinkPayload } from '@/src/utils/buildSaveLinkPayload'
+import {
+  saveLinkFormSchema,
+  saveLinkRequestSchema,
+} from '@/src/schemas/saveLinkFormSchema'
+import { zodResolver } from '@hookform/resolvers/zod'
 
-const folderOptions: DropdownOption[] = [
-  { id: 1, title: '스위프' },
-  { id: 2, title: '과제' },
-  { id: 3, title: '콜라' },
-]
+export function SaveLinkModal() {
+  const isModalOpen = useSaveLinkModalStore((state) => state.isOpen)
+  const close = useSaveLinkModalStore((state) => state.close)
+  const urlValue = useSaveLinkModalStore((state) => state.url)
 
-interface SaveLinkModalProps {
-  isModalOpen: boolean
-  setModalOpen: (isModalOpen: boolean) => void
-  onSubmit: (data: FieldValues) => void
-}
+  const { mutateAsync: saveLink } = useSaveLinkMutation()
+  const { data: referenceList } = useGetReferenceList({ type: 'all' })
 
-export function SaveLinkModal({
-  isModalOpen,
-  setModalOpen,
-  onSubmit,
-}: SaveLinkModalProps) {
-  const { reset, control, register, handleSubmit } = useForm<SaveLinkFormData>({
+  const dropdownOptions = referenceList?.data?.contents.map(
+    (item: ReferenceItem) => ({
+      id: item.id,
+      title: item.title,
+    }),
+  )
+
+  const {
+    reset,
+    control,
+    register,
+    setValue,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<SaveLinkFormData>({
     defaultValues: {
       why: '',
       url: '',
@@ -36,7 +52,13 @@ export function SaveLinkModal({
       colorCode: '',
       memo: '',
     },
+    mode: 'onSubmit',
+    resolver: zodResolver(saveLinkFormSchema),
   })
+
+  useEffect(() => {
+    if (isModalOpen) setValue('url', urlValue)
+  }, [isModalOpen, urlValue])
 
   const selectedFolder = useWatch({
     control,
@@ -44,6 +66,18 @@ export function SaveLinkModal({
   })
 
   const isCreateMode = selectedFolder?.id === 'create-folder'
+
+  const onSubmit = async (data: SaveLinkFormData) => {
+    const payload = buildSaveLinkPayload(data)
+    const validatedPayload = saveLinkRequestSchema.safeParse(payload)
+
+    if (validatedPayload.success) {
+      await saveLink(validatedPayload.data)
+    }
+
+    close()
+    reset()
+  }
 
   return (
     <Modal isOpen={isModalOpen} width="w-400" className="flex flex-col gap-20">
@@ -57,6 +91,9 @@ export function SaveLinkModal({
       <div className="flex flex-col gap-12">
         <label className="text-body-1 text-gray-default">링크</label>
         <Input placeholder="링크를 입력해 주세요" {...register('url')} />
+        {errors.url && (
+          <p className="text-caption-1 text-red-500">{errors.url.message}</p>
+        )}
       </div>
 
       {/* 레퍼런스 폴더 선택 */}
@@ -70,7 +107,7 @@ export function SaveLinkModal({
           control={control}
           render={({ field }) => (
             <Dropdown
-              options={folderOptions}
+              options={dropdownOptions}
               value={field.value}
               onChange={field.onChange}
               placeholder="레퍼런스 폴더를 선택해주세요"
@@ -104,6 +141,11 @@ export function SaveLinkModal({
               placeholder="레퍼런스 폴더 이름을 입력해 주세요"
               {...register('newFolder')}
             />
+            {errors.newFolder && (
+              <p className="text-caption-1 text-red-500">
+                {errors.newFolder.message}
+              </p>
+            )}
           </div>
 
           {/* 색상 선택 */}
@@ -120,6 +162,11 @@ export function SaveLinkModal({
                 />
               )}
             />
+            {errors.colorCode && (
+              <p className="text-caption-1 text-red-500">
+                {errors.colorCode.message}
+              </p>
+            )}
           </div>
         </>
       )}
@@ -132,6 +179,9 @@ export function SaveLinkModal({
           placeholder="메모를 입력하세요(선택)"
           {...register('memo')}
         />
+        {errors.memo && (
+          <p className="text-caption-1 text-red-500">{errors.memo.message}</p>
+        )}
       </div>
 
       <div className="mt-10 flex justify-end gap-20">
@@ -140,7 +190,7 @@ export function SaveLinkModal({
           height="h-42"
           variant="secondary"
           onClick={() => {
-            setModalOpen(false)
+            close()
             reset()
           }}
         >

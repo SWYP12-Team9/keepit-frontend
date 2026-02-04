@@ -1,24 +1,14 @@
+import { LinkItem } from '@/src/types/link/link'
 import { MyLinkCardFooter } from './LinkCardFooter'
 import { MyLinkCardHeader } from './LinkCardHeader'
 import { LinkCardLayout } from './LinkCardLayout'
 
 interface MyLinkCardProps {
-  data: {
-    id: number
-    title: string
-    aiSummary: string
-    status: 'READ' | 'UNREAD'
-    viewCount: number
-    references: {
-      id: number
-      title: string
-      colorCode: string
-      isDefault: boolean
-    }
-  }
+  data: LinkItem
+  onDelete: (id: number) => void
 }
 
-export function MyLinkCard({ data }: MyLinkCardProps) {
+export function MyLinkCard({ data, onDelete }: MyLinkCardProps) {
   return (
     <LinkCardLayout
       title={data.title}
@@ -27,6 +17,7 @@ export function MyLinkCard({ data }: MyLinkCardProps) {
         <MyLinkCardHeader
           title={data.references.title}
           colorCode={data.references.colorCode}
+          onDelete={() => onDelete(data.id)}
         />
       }
       footer={

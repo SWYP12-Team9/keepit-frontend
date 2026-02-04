@@ -5,7 +5,8 @@ import { TabItem } from './TabItem'
 import { Tab, TabVariant } from './types'
 
 export interface TabsProps {
-  tabs: Tab[]
+  defaultTap: Tab
+  tabs?: Tab[]
   selectedTab: Tab | null
   onChange: (tab: Tab) => void
   className?: string
@@ -13,17 +14,20 @@ export interface TabsProps {
 }
 
 export function Tabs({
-  tabs,
+  defaultTap,
+  tabs = [],
   selectedTab,
   onChange,
   className = '',
 }: TabsProps) {
+  const tabList = [defaultTap, ...tabs]
+
   return (
     <div
       className={cn('scrollbar-hide flex gap-10 overflow-x-auto', className)}
       role="tablist"
     >
-      {tabs.map((tab) => {
+      {tabList.map((tab) => {
         const isSelected = tab.id === selectedTab?.id
 
         return (

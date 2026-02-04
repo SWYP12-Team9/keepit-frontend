@@ -1,6 +1,6 @@
 export type TabVariant = 'primary' | 'secondary'
 
 export interface Tab {
-  id: number
+  id: number | 'all'
   title: string
 }

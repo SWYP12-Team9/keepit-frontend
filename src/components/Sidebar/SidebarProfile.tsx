@@ -14,7 +14,7 @@ export default function SidebarProfile({
       )}
     >
       <Image
-        src="/profile.png"
+        src="/images/profile.png"
         alt="profile"
         width={30}
         height={30}

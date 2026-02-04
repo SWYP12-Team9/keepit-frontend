@@ -1,42 +1,47 @@
 'use client'
 
 import Image from 'next/image'
-import { useState } from 'react'
 import { Button } from '../Button'
 import { Input } from '../Input'
 import { TextArea } from '../TextArea'
 import { Field } from './Field'
+import { useDrawerStore } from '@/src/store/drawerStore'
 
 interface DrawerProps {
-  onClose: () => void
+  onMoveLinkModalOpen: () => void
   categoryColor: string
   categoryName: string
   viewCount: number
   title: string
-  reason: string
+  defaultWhy: string
   link: string
   aiSummary: string
-  memo: string
+  defaultMemo: string
 }
 
 export function Drawer({
-  onClose,
+  onMoveLinkModalOpen,
   categoryColor,
   categoryName,
   viewCount,
   title,
-  reason,
+  defaultWhy,
   link,
   aiSummary,
-  memo,
+  defaultMemo,
 }: DrawerProps) {
-  const [isClosed, setIsClosed] = useState(false)
+  const isOpen = useDrawerStore((state) => state.isOpen)
+  const isClosing = useDrawerStore((state) => state.isClosing)
+
+  const closeDrawer = useDrawerStore((state) => state.close)
+  const resetValues = useDrawerStore((state) => state.resetValues)
+
+  const setWhy = useDrawerStore((state) => state.setWhy)
+  const setMemo = useDrawerStore((state) => state.setMemo)
 
   const handleClose = () => {
-    setIsClosed(true)
-    setTimeout(() => {
-      onClose()
-    }, 300)
+    resetValues()
+    closeDrawer()
   }
 
   const handleOpenLink = () => {
@@ -45,10 +50,10 @@ export function Drawer({
     window.open(url, '_blank', 'noopener,noreferrer')
   }
 
-  return (
+  return isOpen ? (
     <div
       className={`fixed top-0 right-0 z-50 flex h-screen w-[405px] flex-col overflow-hidden bg-white p-30 shadow-xl ${
-        isClosed ? 'animate-drawer-out' : 'animate-drawer-in'
+        isClosing ? 'animate-drawer-out' : 'animate-drawer-in'
       }`}
     >
       <div className="mb-24 flex shrink-0 items-center justify-between">
@@ -87,7 +92,11 @@ export function Drawer({
         </Field>
 
         <Field label="이유" className="shrink-0">
-          <Input defaultValue={reason} className="pr-80" />
+          <Input
+            defaultValue={defaultWhy}
+            className="pr-80"
+            onChange={(e) => setWhy(e.target.value)}
+          />
         </Field>
 
         <Field label="링크" className="shrink-0">
@@ -108,7 +117,8 @@ export function Drawer({
         <Field label="메모" className="shrink-0">
           <TextArea
             className="bg-gray-field h-200 resize-none border-none"
-            defaultValue={memo}
+            defaultValue={defaultMemo}
+            onChange={(e) => setMemo(e.target.value)}
           />
         </Field>
       </div>
@@ -127,10 +137,11 @@ export function Drawer({
           width="w-full"
           height="h-54"
           className="text-gray-default bg-blue-light-active"
+          onClick={onMoveLinkModalOpen}
         >
-          레퍼런스 폴더 수정
+          레퍼런스 폴더 이동
         </Button>
       </div>
     </div>
-  )
+  ) : null
 }

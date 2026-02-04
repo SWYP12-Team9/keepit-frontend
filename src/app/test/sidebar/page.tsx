@@ -3,5 +3,5 @@
 import { Sidebar } from '@/src/components/Sidebar'
 
 export default function SidebarTest() {
-  return <Sidebar isExpanded={true} />
+  return <Sidebar />
 }

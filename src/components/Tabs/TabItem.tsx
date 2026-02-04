@@ -32,7 +32,7 @@ export function TabItem({
       aria-selected={isSelected}
       onClick={() => onChange(tab)}
       className={cn(
-        'text-body-3 rounded-8 px-30 py-10 whitespace-nowrap transition-colors',
+        'text-body-3 rounded-8 cursor-pointer px-30 py-10 whitespace-nowrap transition-colors',
         isSelected ? `${styles.selected} text-white` : 'text-gray-disabled',
       )}
     >

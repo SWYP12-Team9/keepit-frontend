@@ -10,7 +10,7 @@ export default function SidebarLogo({ isExpanded }: { isExpanded: boolean }) {
       )}
     >
       <Image
-        src={isExpanded ? '/logo-keepit.png' : '/logo-symbol.png'}
+        src={isExpanded ? '/images/logo-keepit.png' : '/images/logo-symbol.png'}
         alt="logo"
         width={isExpanded ? 129 : 22}
         height={isExpanded ? 51 : 28}

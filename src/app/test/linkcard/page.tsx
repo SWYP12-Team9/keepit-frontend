@@ -1,3 +1,5 @@
+'use client'
+
 import { MyLinkCard } from '@/src/components/LinkCard/MyLinkCard'
 import { OtherLinkCard } from '@/src/components/LinkCard/OtherLinkCard'
 
@@ -55,7 +57,7 @@ export default function LinkCardTest() {
     <div className="flex min-h-screen w-full items-center justify-center bg-gray-50 p-10">
       <div className="flex flex-row flex-wrap justify-center gap-6">
         {MOCK_MY_DATA_LIST.map((data) => (
-          <MyLinkCard key={data.id} data={data} />
+          <MyLinkCard key={data.id} data={data} onDelete={() => {}} />
         ))}
 
         <OtherLinkCard data={MOCK_OTHER_DATA} />

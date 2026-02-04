@@ -8,7 +8,7 @@ import { DropdownItem } from './DropdownItem'
 import { DropdownMenu } from './DropdownMenu'
 
 export interface DropdownProps {
-  options: DropdownOption[]
+  options?: DropdownOption[]
   value: DropdownOption | null
   onChange: (option: DropdownOption) => void
   placeholder?: string
@@ -17,7 +17,7 @@ export interface DropdownProps {
 }
 
 export function Dropdown({
-  options,
+  options = [],
   value,
   onChange,
   placeholder = '',

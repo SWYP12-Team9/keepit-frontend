@@ -8,3 +8,9 @@ export interface SaveLinkFormData {
   colorCode: string
   memo: string
 }
+
+export interface MoveLinkFormData {
+  newFolder: string
+  colorCode: string
+  selectedFolder: DropdownOption | null
+}
