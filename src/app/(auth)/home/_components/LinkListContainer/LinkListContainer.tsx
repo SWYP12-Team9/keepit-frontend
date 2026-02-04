@@ -21,7 +21,7 @@ export function LinkListContainer({
       </span>
     </div>
   ) : (
-    <div className="flex w-full flex-col gap-30 pt-35">
+    <div className="flex w-full flex-col gap-30 pt-23">
       <span className="text-24 text-gray-default leading-28 font-semibold">
         내 링크
       </span>

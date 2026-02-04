@@ -8,11 +8,13 @@ export default function AuthLayout({
   children: React.ReactNode
 }) {
   return (
-    <div className="bg-blue-light flex min-h-screen">
+    <div className="bg-blue-light flex h-screen">
       <Sidebar isExpanded={true} />
 
-      <main className="relative min-w-0 flex-1 pt-20">
-        <div className="rounded-tl-20 min-h-full bg-white">{children}</div>
+      <main className="relative flex flex-1 pt-24">
+        <div className="rounded-tl-20 flex flex-1 flex-col bg-white">
+          {children}
+        </div>
         <OpenSaveLinkButton />
         <SaveLinkModal />
       </main>

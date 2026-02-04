@@ -5,5 +5,5 @@ export default function HomeLayout({
 }: {
   children: React.ReactNode
 }) {
-  return <div className="h-full px-84 pt-84">{children}</div>
+  return <div className="h-full px-84 pt-84 pb-24">{children}</div>
 }

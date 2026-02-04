@@ -31,24 +31,26 @@ export default function Home() {
   }
 
   return (
-    <div>
+    <div className="scrollbar-hide h-full overflow-y-auto">
       <h1 className="text-display-2 text-gray-default pb-38">
         Save Links.
         <br />
         Use them again.
       </h1>
 
-      <div className="flex flex-col gap-25 pb-35">
-        <SaveLinkInput />
-        <SearchLinksInput />
-      </div>
+      <SaveLinkInput />
 
-      <Tabs
-        defaultTap={ALL_TAB}
-        tabs={tabs || []}
-        selectedTab={selectedTab}
-        onChange={handleTabChange}
-      />
+      {/* 스크롤 시 상단에 고정 */}
+      <div className="sticky top-0 z-10 mt-25 bg-white">
+        <SearchLinksInput />
+        <Tabs
+          className="pt-35 pb-12"
+          defaultTap={ALL_TAB}
+          tabs={tabs || []}
+          selectedTab={selectedTab}
+          onChange={handleTabChange}
+        />
+      </div>
 
       <LinkListContainer linkList={linkList} isLoading={isLinkListLoading} />
     </div>
