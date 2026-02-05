@@ -4,12 +4,12 @@ import { Drawer } from '@/src/components/Drawer'
 import { MyLinkCard } from '@/src/components/LinkCard'
 import { MoveLinkModal } from '@/src/components/Modal/MoveLinkModal'
 import { useDrawerStore } from '@/src/store/drawerStore'
-import { LinkItem } from '@/src/types/link/link'
+import { LinkItem, SearchLinkItem } from '@/src/types/link/link'
 import Image from 'next/image'
 import { useState } from 'react'
 
 interface LinkListContainerProps {
-  linkList: LinkItem[]
+  linkList: LinkItem[] | SearchLinkItem[]
   isLoading: boolean
 }
 
@@ -61,7 +61,7 @@ export function LinkListContainer({
         내 링크
       </span>
       <div className="flex flex-wrap gap-10">
-        {linkList.map((item: LinkItem) => (
+        {linkList.map((item: LinkItem | SearchLinkItem) => (
           <div key={item.id} onClick={() => handleOpenLinkDetail(item.id)}>
             <MyLinkCard data={item} onDelete={handleDelete} />
           </div>

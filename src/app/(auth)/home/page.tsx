@@ -10,16 +10,37 @@ import { LinkListContainer } from './_components/LinkListContainer/LinkListConta
 import { SearchLinksInput } from './_components/SearchLinksInput/SearchLinksInput'
 import { SaveLinkInput } from './_components/SaveLinkInput/SaveLinkInput'
 import { useDrawerStore } from '@/src/store/drawerStore'
+import { useDebounce } from '@/src/hooks/useDebounce'
+import { useGetSearchLinks } from '@/src/apis/query/link/useGetSearchLinks'
 
 export default function Home() {
+  const [searchKeyword, setSearchKeyword] = useState('')
   const [selectedTab, setSelectedTab] = useState<Tab | null>(ALL_TAB)
   const closeDrawer = useDrawerStore((state) => state.close)
+
+  const debouncedKeyword = useDebounce({
+    value: searchKeyword,
+    delay: 500,
+  })
+
+  const isSearchMode = debouncedKeyword.trim().length > 0
 
   const { data: linkListData, isLoading: isLinkListLoading } = useGetLinkList(
     selectedTab?.id === 'all' ? {} : { referenceId: selectedTab?.id },
   )
 
-  const linkList = linkListData?.data?.contents ?? []
+  const { data: searchLinksData, isLoading: isSearchLinksLoading } =
+    useGetSearchLinks({
+      keyword: debouncedKeyword,
+      referenceId: selectedTab?.id === 'all' ? undefined : selectedTab?.id,
+      size: 20,
+    })
+
+  const linkList = isSearchMode
+    ? (searchLinksData?.data?.contents ?? [])
+    : (linkListData?.data?.contents ?? [])
+
+  const isLoading = isSearchMode ? isSearchLinksLoading : isLinkListLoading
 
   const { data: referenceList } = useGetReferenceList({ type: 'all' })
 
@@ -33,6 +54,10 @@ export default function Home() {
     closeDrawer()
   }
 
+  const handleSearchChange = (value: string) => {
+    setSearchKeyword(value)
+  }
+
   return (
     <div className="scrollbar-hide h-full overflow-y-auto px-84">
       <h1 className="text-display-2 text-gray-default pb-38">
@@ -44,7 +69,7 @@ export default function Home() {
       <SaveLinkInput />
 
       <div className="sticky top-0 z-10 mt-25 bg-white">
-        <SearchLinksInput />
+        <SearchLinksInput value={searchKeyword} onChange={handleSearchChange} />
         <Tabs
           className="pt-35 pb-12"
           defaultTap={ALL_TAB}
@@ -54,7 +79,7 @@ export default function Home() {
         />
       </div>
 
-      <LinkListContainer linkList={linkList} isLoading={isLinkListLoading} />
+      <LinkListContainer linkList={linkList} isLoading={isLoading} />
     </div>
   )
 }
