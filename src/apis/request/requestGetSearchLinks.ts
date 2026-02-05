@@ -11,7 +11,7 @@ export interface RequestGetSearchLinksParams {
 }
 
 export type RequestGetSearchLinksResponse = BaseResponse<{
-  items: SearchLinkItem[]
+  contents: SearchLinkItem[]
   nextCursor: string
   hasNext: boolean
   keyword: string
