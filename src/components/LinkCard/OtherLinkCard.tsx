@@ -21,6 +21,7 @@ export function OtherLinkCard({ data }: OtherLinkCardProps) {
     <LinkCardLayout
       title={data.title}
       aiSummary={data.aiSummary}
+      onCopyUrl={() => {}}
       header={
         <div className="flex h-[38px] items-center px-12 pt-2">
           <span className="text-caption-1 text-gray-disabled">
