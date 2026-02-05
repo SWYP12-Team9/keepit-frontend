@@ -6,6 +6,7 @@ interface LayoutProps {
   footer: ReactNode
   title: string
   aiSummary: string
+  onCopyUrl: () => void
 }
 
 export function LinkCardLayout({
@@ -13,7 +14,13 @@ export function LinkCardLayout({
   footer,
   title,
   aiSummary,
+  onCopyUrl,
 }: LayoutProps) {
+  const handleCopyUrl = async (e: React.MouseEvent<HTMLButtonElement>) => {
+    e.stopPropagation()
+    onCopyUrl()
+  }
+
   return (
     <div className="bg-gray-box mb-12 flex h-[286px] w-[331px] flex-col rounded-[10px] px-8 pt-8 pb-[10px] opacity-100">
       {header}
@@ -42,10 +49,10 @@ export function LinkCardLayout({
         </div>
 
         <div className="mt-auto w-full">
-          <div className="bg-gray-field mt-[14px] mb-[10px] h-[1px] w-full" />
+          <div className="bg-gray-field mt-14 mb-10 h-1 w-full" />
           <div className="flex items-center justify-between">
             {footer}
-            <button className="p-2">
+            <button className="cursor-pointer p-2" onClick={handleCopyUrl}>
               <Image
                 src="../icons/copy.svg"
                 alt="copy"

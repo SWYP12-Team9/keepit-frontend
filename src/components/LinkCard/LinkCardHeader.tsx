@@ -16,7 +16,8 @@ export function MyLinkCardHeader({
 }: MyLinkCardHeaderProps) {
   const [isOpenMenu, setIsOpenMenu] = useState(false)
 
-  const handleDelete = () => {
+  const handleDelete = (e: React.MouseEvent<HTMLButtonElement>) => {
+    e.stopPropagation()
     setIsOpenMenu(false)
     onDelete()
   }
@@ -32,7 +33,10 @@ export function MyLinkCardHeader({
       </div>
       <button
         className="cursor-pointer p-2"
-        onClick={() => setIsOpenMenu(!isOpenMenu)}
+        onClick={(e) => {
+          e.stopPropagation()
+          setIsOpenMenu(!isOpenMenu)
+        }}
       >
         <Image src="/icons/more.svg" alt="more" width={22} height={22} />
       </button>

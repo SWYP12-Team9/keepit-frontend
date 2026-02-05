@@ -4,18 +4,20 @@ import { Drawer } from '@/src/components/Drawer'
 import { MyLinkCard } from '@/src/components/LinkCard'
 import { MoveLinkModal } from '@/src/components/Modal/MoveLinkModal'
 import { useDrawerStore } from '@/src/store/drawerStore'
-import { LinkItem } from '@/src/types/link/link'
+import { LinkItem, SearchLinkItem } from '@/src/types/link/link'
 import Image from 'next/image'
 import { useState } from 'react'
 
 interface LinkListContainerProps {
-  linkList: LinkItem[]
+  linkList: LinkItem[] | SearchLinkItem[]
   isLoading: boolean
+  isSearchMode: boolean
 }
 
 export function LinkListContainer({
   linkList,
   isLoading,
+  isSearchMode,
 }: LinkListContainerProps) {
   const [selectedLinkId, setSelectedLinkId] = useState<number | null>(null)
   const [isMoveLinkModalOpen, setMoveLinkModalOpen] = useState(false)
@@ -50,9 +52,14 @@ export function LinkListContainer({
     <div className="pt-35 text-center">Loading...</div>
   ) : !linkList.length ? (
     <div className="flex flex-col items-center justify-center gap-20 pt-80">
-      <Image src="/images/paper.png" alt="paper" width={57} height={71} />
+      <Image
+        src={isSearchMode ? '/images/empty-link.png' : '/images/paper.png'}
+        alt="paper"
+        width={isSearchMode ? 92 : 57}
+        height={71}
+      />
       <span className="text-body-1 text-gray-default">
-        저장한 링크가 없어요.
+        {isSearchMode ? '찾는 링크가 없어요.' : '저장한 링크가 없어요.'}
       </span>
     </div>
   ) : (
@@ -61,7 +68,7 @@ export function LinkListContainer({
         내 링크
       </span>
       <div className="flex flex-wrap gap-10">
-        {linkList.map((item: LinkItem) => (
+        {linkList.map((item: LinkItem | SearchLinkItem) => (
           <div key={item.id} onClick={() => handleOpenLinkDetail(item.id)}>
             <MyLinkCard data={item} onDelete={handleDelete} />
           </div>
