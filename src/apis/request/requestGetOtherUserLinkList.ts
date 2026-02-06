@@ -3,7 +3,7 @@ import { axiosInstance } from '../instance/axiosInstance'
 import { OtherUserLinkItem } from '@/src/types/recommendations/recommendations'
 
 export interface RequestGetOtherUserLinkListParams {
-  category: string
+  category?: string
   size?: number
 }
 

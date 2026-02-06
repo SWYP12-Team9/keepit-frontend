@@ -13,15 +13,14 @@ import { SaveOtherUserLinkModal } from './_components/SaveOtherUserLinkModal/Sav
 
 export default function ExplorePage() {
   const [selectedTab, setSelectedTab] = useState<Tab>(ALL_TAB)
+  const [searchKeyword, setSearchKeyword] = useState('')
   const [selectedLink, setSelectedLink] = useState<OtherUserLinkItem | null>(
     null,
   )
 
-  const [searchKeyword, setSearchKeyword] = useState('')
-
   const { data: categories } = useGetCategories()
   const { data: otherUserLinkList } = useGetOtherUserLinkList({
-    category: selectedTab.title,
+    category: selectedTab?.id === 'all' ? undefined : selectedTab.title,
     size: 20,
   })
 
@@ -39,7 +38,7 @@ export default function ExplorePage() {
   }
 
   return (
-    <main>
+    <main className="scrollbar-hide h-full overflow-y-auto px-84 pb-24">
       <SearchLinksInput
         value={searchKeyword}
         onChange={handleSearchChange}
@@ -53,12 +52,14 @@ export default function ExplorePage() {
         className="py-30"
       />
 
-      <div className="relative flex flex-wrap gap-20">
-        {otherUserLinkList?.data.map((item: OtherUserLinkItem) => (
-          <div key={item.id} onClick={() => setSelectedLink(item)}>
-            <OtherLinkCard data={item} />
-          </div>
-        ))}
+      <div className="relative">
+        <div className="flex flex-wrap gap-10">
+          {otherUserLinkList?.data.map((item: OtherUserLinkItem) => (
+            <div key={item.id} onClick={() => setSelectedLink(item)}>
+              <OtherLinkCard data={item} />
+            </div>
+          ))}
+        </div>
         {selectedLink && (
           <SaveOtherUserLinkModal
             data={selectedLink}

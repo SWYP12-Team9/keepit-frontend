@@ -3,6 +3,7 @@ import Image from 'next/image'
 import { Input } from '@/src/components/Input'
 import { TextArea } from '@/src/components/TextArea'
 import { Button } from '@/src/components/Button'
+import { useSaveLinkModalStore } from '@/src/store/saveLinkModalStore'
 
 interface SaveOtherUserLinkModalProps {
   data: OtherUserLinkItem
@@ -14,8 +15,14 @@ export function SaveOtherUserLinkModal({
 
   onClose,
 }: SaveOtherUserLinkModalProps) {
+  const open = useSaveLinkModalStore((state) => state.open)
+
+  const handleSaveLinkModalOpen = () => {
+    open(data.url)
+  }
+
   return (
-    <div className="rounded-20 absolute top-0 left-0 z-60 flex h-592 w-682 flex-col gap-20 overflow-y-auto bg-white p-30 shadow-[0_0_20px_0_rgba(234,234,234,1)]">
+    <div className="rounded-20 sticky top-0 bottom-0 z-40 flex h-592 w-682 flex-col gap-20 overflow-y-auto bg-white p-30 shadow-[0_0_20px_0_rgba(234,234,234,1)]">
       <Image
         src="/icons/close-tab-left.svg"
         alt="close modal"
@@ -46,7 +53,7 @@ export function SaveOtherUserLinkModal({
         <Button variant="secondary" width="w-160" height="h-54">
           원문 열기
         </Button>
-        <Button width="w-160" height="h-54">
+        <Button width="w-160" height="h-54" onClick={handleSaveLinkModalOpen}>
           내 레퍼런스 뷰에 저장
         </Button>
       </div>
