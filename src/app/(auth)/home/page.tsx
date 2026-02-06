@@ -40,8 +40,6 @@ export default function Home() {
     ? (searchLinksData?.data?.contents ?? [])
     : (linkListData?.data?.contents ?? [])
 
-  const isLoading = isSearchMode ? isSearchLinksLoading : isLinkListLoading
-
   const { data: referenceList } = useGetReferenceList({ type: 'all' })
 
   const tabs = referenceList?.data?.contents.map((item: ReferenceItem) => ({
@@ -85,7 +83,7 @@ export default function Home() {
 
       <LinkListContainer
         linkList={linkList}
-        isLoading={isLoading}
+        isLoading={isSearchMode ? isSearchLinksLoading : isLinkListLoading}
         isSearchMode={isSearchMode}
       />
     </div>
