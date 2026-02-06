@@ -38,19 +38,33 @@ const MOCK_MY_DATA_LIST = [
   },
 ]
 
-const MOCK_OTHER_DATA = {
-  id: 1,
-  url: 'https://example.com/article',
-  title: '성장하는 개발자가 되기 위한 5가지 습관',
-  aiSummary:
-    '지속적인 성장을 위해 프론트엔드 엔지니어가 가져야 할 학습 태도와 구체적인 실천 방안을 제시합니다.',
-  category: '커리어/자기계발',
-  user: {
-    userId: 1,
-    nickname: '스위프',
-    profileImageUrl: '/profile.png',
+const MOCK_OTHER_DATA = [
+  {
+    id: 1,
+    url: 'https://example.com/article',
+    title: '성장하는 개발자가 되기 위한 5가지 습관',
+    aiSummary:
+      '지속적인 성장을 위해 프론트엔드 엔지니어가 가져야 할 학습 태도와 구체적인 실천 방안을 제시합니다.',
+    category: '커리어/자기계발',
+    user: {
+      userId: 1,
+      nickname: '스위프',
+      profileImageUrl: null,
+    },
   },
-}
+  {
+    id: 2,
+    url: 'https://example.com/article',
+    title: '추천 아티클 제목',
+    aiSummary: '이 글의 핵심 요약...',
+    category: '경제/시사',
+    user: {
+      userId: 2,
+      nickname: '홍길동',
+      profileImageUrl: null,
+    },
+  },
+]
 
 export default function LinkCardTest() {
   return (
@@ -60,7 +74,9 @@ export default function LinkCardTest() {
           <MyLinkCard key={data.id} data={data} onDelete={() => {}} />
         ))}
 
-        <OtherLinkCard data={MOCK_OTHER_DATA} />
+        {MOCK_OTHER_DATA.map((data) => (
+          <OtherLinkCard key={data.id} data={data} />
+        ))}
       </div>
     </div>
   )

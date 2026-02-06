@@ -2,7 +2,7 @@ import Image from 'next/image'
 
 interface LinkCardProfileProps {
   nickname: string
-  profileImageUrl?: string
+  profileImageUrl?: string | null
 }
 
 export function LinkCardProfile({
@@ -13,7 +13,7 @@ export function LinkCardProfile({
     <div className="flex items-center gap-[6px]">
       <div className="relative h-[22px] w-[22px] overflow-hidden rounded-full">
         <Image
-          src={profileImageUrl || '/profile.png'}
+          src={profileImageUrl || '/images/defaultProfile.png'}
           alt={`${nickname} profile`}
           width={22}
           height={22}

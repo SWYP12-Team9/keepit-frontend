@@ -1,19 +1,9 @@
+import { OtherUserLinkItem } from '@/src/types/recommendations/recommendations'
 import { OtherLinkCardFooter } from './LinkCardFooter'
 import { LinkCardLayout } from './LinkCardLayout'
 
 interface OtherLinkCardProps {
-  data: {
-    id: number
-    url: string
-    title: string
-    aiSummary: string
-    category: string
-    user: {
-      userId: number
-      nickname: string
-      profileImageUrl: string
-    }
-  }
+  data: OtherUserLinkItem
 }
 
 export function OtherLinkCard({ data }: OtherLinkCardProps) {
