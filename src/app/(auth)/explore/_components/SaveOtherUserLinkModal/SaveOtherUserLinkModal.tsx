@@ -50,7 +50,12 @@ export function SaveOtherUserLinkModal({
       </div>
 
       <div className="mt-auto flex justify-end gap-14">
-        <Button variant="secondary" width="w-160" height="h-54">
+        <Button
+          variant="secondary"
+          width="w-160"
+          height="h-54"
+          onClick={() => window.open(data.url, '_blank')}
+        >
           원문 열기
         </Button>
         <Button width="w-160" height="h-54" onClick={handleSaveLinkModalOpen}>
