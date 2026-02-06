@@ -3,7 +3,9 @@ export interface OtherUserLinkItem {
   url: string
   title: string
   aiSummary: string
-  category: string
+  category: {
+    name: string
+  }
   user: {
     userId: number
     nickname: string

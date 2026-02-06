@@ -45,7 +45,9 @@ const MOCK_OTHER_DATA = [
     title: '성장하는 개발자가 되기 위한 5가지 습관',
     aiSummary:
       '지속적인 성장을 위해 프론트엔드 엔지니어가 가져야 할 학습 태도와 구체적인 실천 방안을 제시합니다.',
-    category: '커리어/자기계발',
+    category: {
+      name: '커리어/자기계발',
+    },
     user: {
       userId: 1,
       nickname: '스위프',
@@ -57,7 +59,9 @@ const MOCK_OTHER_DATA = [
     url: 'https://example.com/article',
     title: '추천 아티클 제목',
     aiSummary: '이 글의 핵심 요약...',
-    category: '경제/시사',
+    category: {
+      name: '경제/시사',
+    },
     user: {
       userId: 2,
       nickname: '홍길동',
