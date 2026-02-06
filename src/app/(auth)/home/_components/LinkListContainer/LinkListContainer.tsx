@@ -6,7 +6,6 @@ import { MyLinkCard } from '@/src/components/LinkCard'
 import { MoveLinkModal } from '@/src/components/Modal/MoveLinkModal'
 import { useDrawerStore } from '@/src/store/drawerStore'
 import { LinkItem, SearchLinkItem } from '@/src/types/link/link'
-import Image from 'next/image'
 import { useState } from 'react'
 
 interface LinkListContainerProps {
@@ -86,6 +85,15 @@ export function LinkListContainer({
       )}
     </div>
   ) : (
-    <EmptyLinks isSearchMode={isSearchMode} />
+    <EmptyLinks
+      message={isSearchMode ? '찾는 링크가 없어요.' : '저장한 링크가 없어요.'}
+      className="h-240"
+      imageProps={{
+        src: isSearchMode ? '/images/empty-link.png' : '/images/paper.png',
+        alt: isSearchMode ? 'empty link' : 'paper',
+        width: isSearchMode ? 92 : 57,
+        height: isSearchMode ? 71 : 57,
+      }}
+    />
   )
 }

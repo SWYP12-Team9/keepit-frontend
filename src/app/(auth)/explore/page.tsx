@@ -78,7 +78,6 @@ export default function ExplorePage() {
             ? isSearchOtherUserLinksLoading
             : isOtherUserLinkListLoading
         }
-        isSearchMode={isSearchMode}
       />
 
       <ProfileSetup />

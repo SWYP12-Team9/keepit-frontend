@@ -9,13 +9,11 @@ import { EmptyLinks } from '@/src/components/EmptyLinks/EmptyLinks'
 interface OtherUserLinksContainerProps {
   otherUserLinkList: OtherUserLinkItem[]
   isLoading: boolean
-  isSearchMode: boolean
 }
 
 export function OtherUserLinksContainer({
   otherUserLinkList,
   isLoading,
-  isSearchMode,
 }: OtherUserLinksContainerProps) {
   const [selectedLink, setSelectedLink] = useState<OtherUserLinkItem | null>(
     null,
@@ -45,6 +43,14 @@ export function OtherUserLinksContainer({
       )}
     </div>
   ) : (
-    <EmptyLinks isSearchMode={isSearchMode} />
+    <EmptyLinks
+      message="찾는 링크가 없어요."
+      imageProps={{
+        src: '/images/empty-link.png',
+        alt: 'empty link',
+        width: 92,
+        height: 71,
+      }}
+    />
   )
 }
