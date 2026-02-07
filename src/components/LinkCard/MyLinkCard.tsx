@@ -1,8 +1,8 @@
 import { LinkItem, SearchLinkItem } from '@/src/types/link/link'
+import { showErrorToast, showSuccessToast } from '@/src/utils/toast'
 import { MyLinkCardFooter } from './LinkCardFooter'
 import { MyLinkCardHeader } from './LinkCardHeader'
 import { LinkCardLayout } from './LinkCardLayout'
-import { showErrorToast, showSuccessToast } from '@/src/utils/toast'
 
 interface MyLinkCardProps {
   data: LinkItem | SearchLinkItem
@@ -27,8 +27,8 @@ export function MyLinkCard({ data, onDelete }: MyLinkCardProps) {
       onCopyUrl={handleCopyUrl}
       header={
         <MyLinkCardHeader
-          title={data.reference.title}
-          colorCode={data.reference.colorCode}
+          title={data.reference?.title || ''}
+          colorCode={data.reference?.colorCode || ''}
           onDelete={() => onDelete(data.id)}
         />
       }
