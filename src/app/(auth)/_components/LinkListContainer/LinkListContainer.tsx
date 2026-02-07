@@ -12,12 +12,14 @@ interface LinkListContainerProps {
   linkList: LinkItem[] | SearchLinkItem[]
   isLoading: boolean
   isSearchMode: boolean
+  showTitle?: boolean
 }
 
 export function LinkListContainer({
   linkList,
   isLoading,
   isSearchMode,
+  showTitle = true,
 }: LinkListContainerProps) {
   const [selectedLinkId, setSelectedLinkId] = useState<number | null>(null)
   const [isMoveLinkModalOpen, setMoveLinkModalOpen] = useState(false)
@@ -64,9 +66,11 @@ export function LinkListContainer({
     </div>
   ) : (
     <div className="flex w-full flex-col gap-30 pt-23">
-      <span className="text-24 text-gray-default leading-28 font-semibold">
-        내 링크
-      </span>
+      {showTitle && (
+        <span className="text-24 text-gray-default leading-28 font-semibold">
+          내 링크
+        </span>
+      )}
       <div className="flex flex-wrap gap-10">
         {linkList.map((item: LinkItem | SearchLinkItem) => (
           <div key={item.id} onClick={() => handleOpenLinkDetail(item.id)}>
