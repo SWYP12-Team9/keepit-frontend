@@ -1,12 +1,11 @@
+import { usePatchLinkMutation } from '@/src/apis/query/link/usePatchLinkMutation'
+import { useGetReferenceList } from '@/src/apis/query/reference/useGetReferenceList'
+import { useDrawerStore } from '@/src/store/drawerStore'
 import { Controller, useForm } from 'react-hook-form'
 import { Button } from '../Button'
-import { Modal } from './Modal'
 import { Dropdown } from '../Dropdown'
-import { useGetReferenceList } from '@/src/apis/query/reference/useGetReferenceList'
-import { ReferenceItem } from '@/src/types/reference/reference'
+import { Modal } from './Modal'
 import { MoveLinkFormData } from './types'
-import { usePatchLinkMutation } from '@/src/apis/query/link/usePatchLinkMutation'
-import { useDrawerStore } from '@/src/store/drawerStore'
 
 interface MoveLinkModalProps {
   isModalOpen: boolean
@@ -29,12 +28,13 @@ export function MoveLinkModal({
   const { data: referenceList } = useGetReferenceList({ type: 'all' })
   const { mutateAsync: patchLink } = usePatchLinkMutation()
 
-  const dropdownOptions = referenceList?.data?.contents.map(
-    (item: ReferenceItem) => ({
-      id: item.id,
-      title: item.title,
-    }),
-  )
+  const dropdownOptions =
+    referenceList?.pages.flatMap((page) =>
+      page.data.contents.map((item) => ({
+        id: item.id,
+        title: item.title,
+      })),
+    ) || []
 
   const { reset, control, handleSubmit } = useForm<MoveLinkFormData>({
     defaultValues: {
