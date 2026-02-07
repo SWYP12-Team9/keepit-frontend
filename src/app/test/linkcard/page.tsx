@@ -6,7 +6,7 @@ import { OtherLinkCard } from '@/src/components/LinkCard/OtherLinkCard'
 const MOCK_MY_DATA_LIST = [
   {
     id: 1,
-    references: {
+    reference: {
       id: 10,
       title: '디자인 시스템',
       colorCode: '#FF5733',
@@ -23,7 +23,7 @@ const MOCK_MY_DATA_LIST = [
   },
   {
     id: 2,
-    references: {
+    reference: {
       id: 11,
       title: '프론트엔드',
       colorCode: '#5C6CFF',

@@ -1,3 +1,5 @@
+import { RequestGetSearchLinksParams } from '../../request/requestGetSearchLinks'
+
 export const linkKeys = {
   all: ['link'] as const,
   lists: () => [...linkKeys.all, 'list'] as const,
@@ -5,4 +7,7 @@ export const linkKeys = {
 
   details: () => [...linkKeys.all, 'detail'] as const,
   detail: (id: number) => [...linkKeys.details(), id] as const,
+
+  search: (params: RequestGetSearchLinksParams) =>
+    [...linkKeys.all, 'search', params] as const,
 }

@@ -1,14 +1,20 @@
 import { Input } from '@/src/components/Input'
 import Image from 'next/image'
 
-export function SearchLinksInput() {
+interface SearchLinksInputProps {
+  value: string
+  onChange: (value: string) => void
+}
+
+export function SearchLinksInput({ value, onChange }: SearchLinksInputProps) {
   return (
     <div className="relative">
       <Input
         className="rounded-100 text-body-1 px-40"
         height="h-60"
         placeholder="왜 저장했는지로 검색해 보세요"
-        onChange={() => {}}
+        value={value}
+        onChange={(e) => onChange(e.target.value)}
       />
       <Image
         src="/icons/search.svg"
