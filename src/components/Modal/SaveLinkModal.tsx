@@ -1,5 +1,7 @@
 'use client'
 
+import { useSaveLinkMutation } from '@/src/apis/query/link/useSaveLinkMutation'
+import { useGetReferenceList } from '@/src/apis/query/reference/useGetReferenceList'
 import { Button } from '@/src/components/Button'
 import { ColorPicker } from '@/src/components/ColorPicker'
 import { Dropdown } from '@/src/components/Dropdown'
@@ -7,19 +9,16 @@ import { Input } from '@/src/components/Input'
 import { Modal } from '@/src/components/Modal'
 import { TextArea } from '@/src/components/TextArea'
 import { COLOR_OPTIONS } from '@/src/constants/colorOptions'
-import { Controller, useForm, useWatch } from 'react-hook-form'
-import { SaveLinkFormData } from './types'
-import { useSaveLinkModalStore } from '@/src/store/saveLinkModalStore'
-import { useGetReferenceList } from '@/src/apis/query/reference/useGetReferenceList'
-import { ReferenceItem } from '@/src/types/reference/reference'
-import { useEffect } from 'react'
-import { useSaveLinkMutation } from '@/src/apis/query/link/useSaveLinkMutation'
-import { buildSaveLinkPayload } from '@/src/utils/buildSaveLinkPayload'
 import {
   saveLinkFormSchema,
   saveLinkRequestSchema,
 } from '@/src/schemas/saveLinkFormSchema'
+import { useSaveLinkModalStore } from '@/src/store/saveLinkModalStore'
+import { buildSaveLinkPayload } from '@/src/utils/buildSaveLinkPayload'
 import { zodResolver } from '@hookform/resolvers/zod'
+import { useEffect } from 'react'
+import { Controller, useForm, useWatch } from 'react-hook-form'
+import { SaveLinkFormData } from './types'
 
 export function SaveLinkModal() {
   const isModalOpen = useSaveLinkModalStore((state) => state.isOpen)
@@ -29,12 +28,13 @@ export function SaveLinkModal() {
   const { mutateAsync: saveLink } = useSaveLinkMutation()
   const { data: referenceList } = useGetReferenceList({ type: 'all' })
 
-  const dropdownOptions = referenceList?.data?.contents.map(
-    (item: ReferenceItem) => ({
-      id: item.id,
-      title: item.title,
-    }),
-  )
+  const dropdownOptions =
+    referenceList?.pages.flatMap((page) =>
+      page.data.contents.map((item) => ({
+        id: item.id,
+        title: item.title,
+      })),
+    ) || []
 
   const {
     reset,
