@@ -15,7 +15,7 @@ export function OtherLinkCard({ data }: OtherLinkCardProps) {
       header={
         <div className="flex h-[38px] items-center px-12 pt-2">
           <span className="text-caption-1 text-gray-disabled">
-            {data.category.name}
+            {data.category?.name ?? ''}
           </span>
         </div>
       }

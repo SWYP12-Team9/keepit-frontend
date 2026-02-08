@@ -13,7 +13,7 @@ export function LinkCardProfile({
     <div className="flex items-center gap-[6px]">
       <div className="relative h-[22px] w-[22px] overflow-hidden rounded-full">
         <Image
-          src={profileImageUrl || '/images/defaultProfile.png'}
+          src={profileImageUrl?.trim() || '/images/defaultProfile.png'}
           alt={`${nickname} profile`}
           width={22}
           height={22}
