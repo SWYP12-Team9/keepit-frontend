@@ -1,6 +1,7 @@
+// ProfileModal.tsx
 import Image from 'next/image'
-import { ChangeEvent, useRef } from 'react'
-import { FieldValues, useForm, useWatch } from 'react-hook-form'
+import { ChangeEvent, useRef, useState } from 'react'
+import { useForm, useWatch } from 'react-hook-form'
 import { Button } from '../Button'
 import { Modal } from './Modal'
 import { ProfileField } from './ProfileField'
@@ -8,7 +9,11 @@ import { ProfileField } from './ProfileField'
 interface ProfileModalProps {
   isModalOpen: boolean
   setModalOpen: (isModalOpen: boolean) => void
-  onSubmit: (data: FieldValues) => void
+  onSubmit: (data: {
+    profile: { nickname: string; introduction: string }
+    profileImage?: File | null
+    backgroundImage?: File | null
+  }) => void
   initialData?: {
     nickname: string
     introduction: string
@@ -29,28 +34,66 @@ export function ProfileModal({
   const profileInputRef = useRef<HTMLInputElement>(null)
   const bgInputRef = useRef<HTMLInputElement>(null)
 
-  const { control, register, handleSubmit, setValue } = useForm({
+  const [profileImageFile, setProfileImageFile] = useState<File | null>(null)
+  const [backgroundImageFile, setBackgroundImageFile] = useState<File | null>(
+    null,
+  )
+  const [profileImagePreview, setProfileImagePreview] = useState<string>(
+    initialData?.profileImageUrl || DEFAULT_PROFILE,
+  )
+  const [backgroundImagePreview, setBackgroundImagePreview] = useState<string>(
+    initialData?.backgroundImageUrl || DEFAULT_BG,
+  )
+
+  const { control, register, handleSubmit } = useForm({
     defaultValues: {
       nickname: initialData?.nickname || '',
       introduction: initialData?.introduction || '',
-      profileImageUrl: initialData?.profileImageUrl || DEFAULT_PROFILE,
-      backgroundImageUrl: initialData?.backgroundImageUrl || DEFAULT_BG,
     },
   })
 
   const nicknameValue = useWatch({ control, name: 'nickname' }) || ''
   const introValue = useWatch({ control, name: 'introduction' }) || ''
-  const profileImageUrl = useWatch({ control, name: 'profileImageUrl' })
-  const backgroundImageUrl = useWatch({ control, name: 'backgroundImageUrl' })
 
   const handleImageChange = (
     e: ChangeEvent<HTMLInputElement>,
-    field: 'profileImageUrl' | 'backgroundImageUrl',
+    type: 'profile' | 'background',
   ) => {
     const file = e.target.files?.[0]
     if (!file) return
+
     const imageUrl = URL.createObjectURL(file)
-    setValue(field, imageUrl)
+
+    if (type === 'profile') {
+      setProfileImageFile(file)
+      setProfileImagePreview(imageUrl)
+    } else {
+      setBackgroundImageFile(file)
+      setBackgroundImagePreview(imageUrl)
+    }
+  }
+
+  const handleFormSubmit = (data: {
+    nickname: string
+    introduction: string
+  }) => {
+    onSubmit({
+      profile: {
+        nickname: data.nickname,
+        introduction: data.introduction,
+      },
+      profileImage: profileImageFile,
+      backgroundImage: backgroundImageFile,
+    })
+  }
+
+  const resetProfileImage = async () => {
+    const response = await fetch('/images/defaultProfile.png')
+    const blob = await response.blob()
+    const file = new File([blob], 'defaultProfile.png', { type: 'image/png' })
+
+    setProfileImageFile(file)
+    setProfileImagePreview(DEFAULT_PROFILE)
   }
 
   return (
@@ -71,11 +114,14 @@ export function ProfileModal({
         )}
       </div>
 
-      <form onSubmit={handleSubmit(onSubmit)} className="flex w-full flex-col">
+      <form
+        onSubmit={handleSubmit(handleFormSubmit)}
+        className="flex w-full flex-col"
+      >
         <div className="rounded-12 bg-blue-light p-24 pb-20">
           <div className="rounded-12 relative h-140 w-full overflow-hidden bg-[#C5C8E1]">
             <Image
-              src={backgroundImageUrl}
+              src={backgroundImagePreview}
               alt="Background"
               fill
               sizes="100vw"
@@ -87,7 +133,7 @@ export function ProfileModal({
               type="file"
               accept="image/*"
               className="hidden"
-              onChange={(e) => handleImageChange(e, 'backgroundImageUrl')}
+              onChange={(e) => handleImageChange(e, 'background')}
             />
 
             <button
@@ -110,7 +156,7 @@ export function ProfileModal({
               <div className="relative h-80 w-80">
                 <div className="relative h-full w-full overflow-hidden rounded-full bg-white">
                   <Image
-                    src={profileImageUrl}
+                    src={profileImagePreview}
                     alt="Profile"
                     fill
                     sizes="80px"
@@ -123,7 +169,7 @@ export function ProfileModal({
                   type="file"
                   accept="image/*"
                   className="hidden"
-                  onChange={(e) => handleImageChange(e, 'profileImageUrl')}
+                  onChange={(e) => handleImageChange(e, 'profile')}
                 />
 
                 <button
@@ -143,7 +189,7 @@ export function ProfileModal({
 
             <button
               type="button"
-              onClick={() => setValue('profileImageUrl', DEFAULT_PROFILE)}
+              onClick={resetProfileImage}
               className="text-body-3 text-blue-normal ml-4 hover:underline"
             >
               기본 이미지로 설정
