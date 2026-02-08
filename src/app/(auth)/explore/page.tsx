@@ -9,7 +9,7 @@ import { useDebounce } from '@/src/hooks/useDebounce'
 import { useState } from 'react'
 import { SearchLinksInput } from '../_components/SearchLinksInput/SearchLinksInput'
 import { OtherUserLinksContainer } from './_components/OtherUserLinksContainer/OtherUserLinksContainer'
-import { ProfileSetup } from './_components/ProfileSetup'
+import { ProfileSetup } from './_components/ProfileSetup/ProfileSetup'
 
 export default function ExplorePage() {
   const [selectedTab, setSelectedTab] = useState<Tab>(ALL_TAB)
