@@ -44,7 +44,7 @@ export function LinkCardLayout({
             />
           </div>
           <p className="text-gray-default text-body-4 line-clamp-3 [display:-webkit-box] overflow-hidden text-justify break-all [-webkit-box-orient:vertical] [-webkit-line-clamp:3]">
-            {aiSummary}
+            {aiSummary || 'AI 요약 없음'}
           </p>
         </div>
 
