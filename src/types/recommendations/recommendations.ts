@@ -5,7 +5,7 @@ export interface OtherUserLinkItem {
   aiSummary: string
   category: {
     name: string
-  }
+  } | null
   user: {
     userId: number
     nickname: string
