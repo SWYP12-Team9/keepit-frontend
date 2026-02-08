@@ -1,6 +1,7 @@
 import localFont from 'next/font/local'
 import './globals.css'
 
+import { ProfileSetup } from './(auth)/explore/_components/ProfileSetup/ProfileSetup'
 import { Providers } from './providers'
 
 const pretendard = localFont({
@@ -34,7 +35,10 @@ export default function RootLayout({
   return (
     <html lang="ko" className={pretendard.variable}>
       <body>
-        <Providers>{children}</Providers>
+        <Providers>
+          {children}
+          <ProfileSetup />
+        </Providers>
       </body>
     </html>
   )
