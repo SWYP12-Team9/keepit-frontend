@@ -1,4 +1,3 @@
-// ProfileModal.tsx
 import Image from 'next/image'
 import { ChangeEvent, useRef, useState } from 'react'
 import { useForm, useWatch } from 'react-hook-form'
@@ -6,14 +5,16 @@ import { Button } from '../Button'
 import { Modal } from './Modal'
 import { ProfileField } from './ProfileField'
 
+export interface ProfileFormData {
+  profile: { nickname: string; introduction: string }
+  profileImage?: File | null
+  backgroundImage?: File | null
+}
+
 interface ProfileModalProps {
   isModalOpen: boolean
   setModalOpen: (isModalOpen: boolean) => void
-  onSubmit: (data: {
-    profile: { nickname: string; introduction: string }
-    profileImage?: File | null
-    backgroundImage?: File | null
-  }) => void
+  onSubmit: (data: ProfileFormData) => void
   initialData?: {
     nickname: string
     introduction: string

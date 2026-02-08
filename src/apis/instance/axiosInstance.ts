@@ -1,4 +1,5 @@
 import { useAuthStore } from '@/src/store/authStore'
+import { useProfileSetupStore } from '@/src/store/profileSetupStore'
 import axios from 'axios'
 import { requestPostReissue } from '../request/requestPostReissue'
 
@@ -43,6 +44,14 @@ axiosInstance.interceptors.response.use(
   (response) => response,
   async (error) => {
     const originalRequest = error.config
+
+    if (
+      error.response?.status === 403 &&
+      error.response?.data?.code === 'USR007'
+    ) {
+      useProfileSetupStore.getState().open()
+      return Promise.reject(error)
+    }
 
     if (error.response?.status === 401 && !originalRequest._retry) {
       originalRequest._retry = true
