@@ -2,30 +2,38 @@
 
 import { usePostProfileMutation } from '@/src/apis/query/user/usePostUserProfile'
 import { requestGetUserInfo } from '@/src/apis/request/requestGetUserInfo'
-import { ProfileModal } from '@/src/components/Modal/ProfileModal'
+import {
+  ProfileFormData,
+  ProfileModal,
+} from '@/src/components/Modal/ProfileModal'
 import { useAuthStore } from '@/src/store/authStore'
+import { useProfileSetupStore } from '@/src/store/profileSetupStore'
 import { usePathname, useRouter, useSearchParams } from 'next/navigation'
-import { FieldValues } from 'react-hook-form'
+import { useEffect } from 'react'
 
 export function ProfileSetup() {
   const searchParams = useSearchParams()
   const router = useRouter()
   const pathname = usePathname()
 
-  const isNewUser = searchParams.get('isNewUser') === 'true'
+  const { isOpen, open, close } = useProfileSetupStore()
+
+  useEffect(() => {
+    const isNewUser = searchParams.get('isNewUser') === 'true'
+    if (isNewUser) {
+      open()
+    }
+  }, [searchParams, open])
 
   const { mutate: postProfile } = usePostProfileMutation()
   const login = useAuthStore((state) => state.login)
 
-  const handleProfileSubmit = (data: FieldValues) => {
+  const handleProfileSubmit = (data: ProfileFormData) => {
     postProfile(
       {
-        profile: {
-          nickname: data.nickname,
-          introduction: data.introduction,
-        },
-        profileImage: data.profileFile,
-        backgroundImage: data.backgroundFile,
+        profile: data.profile,
+        profileImage: data.profileImage,
+        backgroundImage: data.backgroundImage,
       },
       {
         onSuccess: async () => {
@@ -35,18 +43,23 @@ export function ProfileSetup() {
             nickname: userInfo.nickname,
             profileImage: userInfo.profileImageUrl,
           })
-          router.replace(pathname)
+
+          close()
+
+          if (searchParams.get('isNewUser')) {
+            router.replace(pathname)
+          }
         },
       },
     )
   }
 
-  if (!isNewUser) return null
+  if (!isOpen) return null
 
   return (
     <ProfileModal
-      isModalOpen={isNewUser}
-      setModalOpen={() => router.replace(pathname)}
+      isModalOpen={isOpen}
+      setModalOpen={close}
       onSubmit={handleProfileSubmit}
     />
   )
