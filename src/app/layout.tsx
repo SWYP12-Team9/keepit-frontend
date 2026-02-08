@@ -1,6 +1,7 @@
 import localFont from 'next/font/local'
 import './globals.css'
 
+import { UserInitializer } from './(auth)/_components/UserInitializer/UserInitializer'
 import { ProfileSetup } from './(auth)/explore/_components/ProfileSetup/ProfileSetup'
 import { Providers } from './providers'
 
@@ -36,6 +37,7 @@ export default function RootLayout({
     <html lang="ko" className={pretendard.variable}>
       <body>
         <Providers>
+          <UserInitializer />
           {children}
           <ProfileSetup />
         </Providers>
