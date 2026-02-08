@@ -22,7 +22,7 @@ export default function SidebarProfile({
           src={
             isLoggedIn && user?.profileImage
               ? user.profileImage
-              : '/images/logout-profile.png'
+              : '/images/defaultProfile.png'
           }
           alt="profile"
           fill
