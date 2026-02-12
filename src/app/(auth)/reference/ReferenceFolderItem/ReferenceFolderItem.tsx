@@ -36,7 +36,6 @@ export default function ReferenceFolderItem({
     setIsDeleteConfirmOpen(true)
   }
 
-  // 4. 모달에서 최종 '네(삭제)'를 눌렀을 때 실행
   const handleConfirmDelete = async () => {
     await deleteReference(item.id)
     setIsDeleteConfirmOpen(false)
@@ -148,7 +147,7 @@ export default function ReferenceFolderItem({
           )}
         </div>
 
-        <div className="mt-auto flex flex-col gap-1">
+        <div className="mt-auto flex flex-col gap-4">
           <div className="flex items-center gap-10">
             {!item.isDefault && item.colorCode && (
               <div
