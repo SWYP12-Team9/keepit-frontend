@@ -8,10 +8,16 @@ export function OpenSaveLinkButton() {
 
   return (
     <button
-      className="bg-gray-box rounded-20 absolute right-40 bottom-40 cursor-pointer p-20 shadow-[0px_0px_10px_0px_rgba(230,230,230,1)]"
+      className="absolute right-40 bottom-40 cursor-pointer"
       onClick={() => openSaveLinkModal()}
     >
-      <Image src="/icons/plus-box.svg" alt="plus" width={40} height={40} />
+      <Image
+        src="/images/link-floating.png"
+        alt="링크 저장 버튼"
+        width={70}
+        height={70}
+        priority
+      />
     </button>
   )
 }
