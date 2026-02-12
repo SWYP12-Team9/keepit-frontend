@@ -231,6 +231,7 @@ export default function ReferenceDetails({
           isLoading={isLoading}
           isSearchMode={isSearchMode}
           showTitle={false}
+          isReferenceDetail={true}
         />
       </div>
       <CreateFolderModal

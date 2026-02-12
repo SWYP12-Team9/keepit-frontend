@@ -80,10 +80,10 @@ export default function Reference() {
       {isEmpty ? (
         <div className="flex justify-center pt-100">
           <EmptyLinks
-            message="찾는 링크가 없어요."
+            message="생성된 폴더가 없어요."
             className="h-240"
             imageProps={{
-              src: '/images/empty-link.png',
+              src: '/images/empty-folder.png',
               alt: 'empty reference',
               width: 92,
               height: 71,
