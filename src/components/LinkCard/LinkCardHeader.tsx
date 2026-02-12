@@ -2,6 +2,7 @@
 
 import Image from 'next/image'
 import { useState } from 'react'
+import { ConfirmModal } from '../Modal/ConfirmModal'
 
 interface MyLinkCardHeaderProps {
   title: string
@@ -15,11 +16,17 @@ export function MyLinkCardHeader({
   onDelete,
 }: MyLinkCardHeaderProps) {
   const [isOpenMenu, setIsOpenMenu] = useState(false)
+  const [isConfirmOpen, setIsConfirmOpen] = useState(false)
 
   const handleDelete = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.stopPropagation()
     setIsOpenMenu(false)
+    setIsConfirmOpen(true)
+  }
+
+  const handleConfirmDelete = () => {
     onDelete()
+    setIsConfirmOpen(false)
   }
 
   return (
@@ -49,6 +56,13 @@ export function MyLinkCardHeader({
           <Image src="/icons/delete.svg" alt="delete" width={22} height={22} />
         </button>
       )}
+      <ConfirmModal
+        isOpen={isConfirmOpen}
+        title="링크 카드를 삭제하시겠어요?"
+        description="삭제한 링크 카드는 복원할 수 없습니다."
+        onClose={() => setIsConfirmOpen(false)}
+        onConfirm={handleConfirmDelete}
+      />
     </div>
   )
 }
