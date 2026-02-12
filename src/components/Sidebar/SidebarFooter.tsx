@@ -4,11 +4,15 @@ import { useLogout } from '@/src/apis/query/auth/useLogout'
 import { useAuthStore } from '@/src/store/authStore'
 import { cn } from '@/src/utils/cn'
 import Image from 'next/image'
-import Link from 'next/link'
+import { useState } from 'react'
 import { NavLogout, NavSetting } from '../Icon'
+import { ConfirmModal } from '../Modal/ConfirmModal'
+import { SettingsModal } from '../Modal/SettingModal'
 
 export function SidebarFooter({ isExpanded }: { isExpanded: boolean }) {
   const { isLoggedIn } = useAuthStore()
+  const [isLogoutModalOpen, setIsLogoutModalOpen] = useState(false)
+  const [isSettingsModalOpen, setIsSettingsModalOpen] = useState(false)
 
   const loginProviders = [
     {
@@ -23,6 +27,10 @@ export function SidebarFooter({ isExpanded }: { isExpanded: boolean }) {
   }
 
   const { mutate: logout } = useLogout()
+  const handleConfirmLogout = () => {
+    logout()
+    setIsLogoutModalOpen(false)
+  }
 
   if (!isLoggedIn) {
     return (
@@ -46,26 +54,44 @@ export function SidebarFooter({ isExpanded }: { isExpanded: boolean }) {
   }
 
   return (
-    <div
-      className={cn(
-        'mt-24 mt-auto flex w-full items-center pr-[20px]',
-        isExpanded ? 'justify-end gap-4' : 'flex-col justify-center gap-8 pr-0',
-      )}
-    >
-      <Link
-        href="/settings"
-        className="flex h-40 w-40 items-center justify-center"
+    <>
+      <div
+        className={cn(
+          'mt-24 mt-auto flex w-full items-center pr-[20px]',
+          isExpanded
+            ? 'justify-end gap-4'
+            : 'flex-col justify-center gap-8 pr-0',
+        )}
       >
-        <NavSetting className="h-full w-full" />
-      </Link>
-      <button
-        type="button"
-        onClick={() => logout()}
-        className="flex h-40 w-40 items-center justify-center"
-        aria-label="logout"
-      >
-        <NavLogout className="h-full w-full" />
-      </button>
-    </div>
+        <button
+          onClick={() => setIsSettingsModalOpen(true)}
+          className="flex h-40 w-40 cursor-pointer items-center justify-center"
+          aria-label="settings"
+        >
+          <NavSetting className="h-full w-full" />
+        </button>
+        <button
+          type="button"
+          onClick={() => setIsLogoutModalOpen(true)}
+          className="flex h-40 w-40 cursor-pointer items-center justify-center"
+          aria-label="logout"
+        >
+          <NavLogout className="h-full w-full" />
+        </button>
+      </div>
+      <SettingsModal
+        isOpen={isSettingsModalOpen}
+        onClose={() => setIsSettingsModalOpen(false)}
+      />
+      <ConfirmModal
+        isOpen={isLogoutModalOpen}
+        title="로그아웃"
+        description="로그아웃하고 다른 아이디로 로그인하기"
+        confirmText="네"
+        cancelText="아니요"
+        onClose={() => setIsLogoutModalOpen(false)}
+        onConfirm={handleConfirmLogout}
+      />
+    </>
   )
 }

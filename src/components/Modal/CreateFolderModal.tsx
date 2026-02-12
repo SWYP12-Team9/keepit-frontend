@@ -1,4 +1,6 @@
 import { COLOR_OPTIONS } from '@/src/constants/colorOptions'
+import { createFolderSchema } from '@/src/schemas/saveLinkFormSchema'
+import { zodResolver } from '@hookform/resolvers/zod'
 import { useEffect } from 'react'
 import { Controller, FieldValues, useForm } from 'react-hook-form'
 import { Button } from '../Button'
@@ -21,7 +23,14 @@ export function CreateFolderModal({
   onSubmit,
   initialData,
 }: CreateFolderModalProps) {
-  const { reset, control, register, handleSubmit } = useForm({
+  const {
+    reset,
+    control,
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm({
+    resolver: zodResolver(createFolderSchema),
     defaultValues: {
       isPublic: true,
       title: '',
@@ -79,6 +88,11 @@ export function CreateFolderModal({
               />
             )}
           />
+          {errors.colorCode && (
+            <p className="text-caption-1 text-red-500">
+              {errors.colorCode.message}
+            </p>
+          )}
         </div>
 
         {/* 메모 */}
