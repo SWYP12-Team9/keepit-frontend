@@ -1,11 +1,14 @@
+import { linkKeys } from '@/src/apis/query/link/linkKeys'
 import { useDeleteLinkMutation } from '@/src/apis/query/link/useDeleteLinkMutation'
 import { useGetLinkDetails } from '@/src/apis/query/link/useGetLinkDetails'
+import { requestGetLinkDetails } from '@/src/apis/request/requestGetLinkDetails'
 import { Drawer } from '@/src/components/Drawer'
 import { EmptyLinks } from '@/src/components/EmptyLinks/EmptyLinks'
 import { MyLinkCard } from '@/src/components/LinkCard'
 import { MoveLinkModal } from '@/src/components/Modal/MoveLinkModal'
 import { useDrawerStore } from '@/src/store/drawerStore'
 import { LinkItem, SearchLinkItem } from '@/src/types/link/link'
+import { useQueryClient } from '@tanstack/react-query'
 import { useState } from 'react'
 
 interface LinkListContainerProps {
@@ -13,6 +16,7 @@ interface LinkListContainerProps {
   isLoading: boolean
   isSearchMode: boolean
   showTitle?: boolean
+  isReferenceDetail?: boolean
 }
 
 export function LinkListContainer({
@@ -20,7 +24,9 @@ export function LinkListContainer({
   isLoading,
   isSearchMode,
   showTitle = true,
+  isReferenceDetail = false,
 }: LinkListContainerProps) {
+  const queryClient = useQueryClient()
   const [selectedLinkId, setSelectedLinkId] = useState<number | null>(null)
   const [isMoveLinkModalOpen, setMoveLinkModalOpen] = useState(false)
 
@@ -37,13 +43,54 @@ export function LinkListContainer({
     await deleteLink(id)
   }
 
-  const handleOpenLinkDetail = (id: number) => {
+  const getEmptyStateProps = () => {
+    if (isSearchMode) {
+      return {
+        message: '찾는 링크가 없어요.',
+        src: '/images/empty-link.png',
+        width: 92,
+        height: 71,
+        alt: 'empty link',
+      }
+    }
+
+    if (isReferenceDetail) {
+      return {
+        message: '저장된 링크가 없어요.',
+        src: '/images/referencedetail-empty.png',
+        width: 92,
+        height: 71,
+        alt: 'empty link',
+      }
+    }
+
+    return {
+      message: '저장한 링크가 없어요.',
+      src: '/images/paper.png',
+      width: 57,
+      height: 57,
+      alt: 'paper',
+    }
+  }
+
+  const emptyProps = getEmptyStateProps()
+
+  const handleOpenLinkDetail = async (id: number) => {
     setSelectedLinkId(id)
-    initializeValues({
-      why: linkDetails?.why ?? '',
-      memo: linkDetails?.memo ?? '',
-    })
-    openDrawer()
+    try {
+      await queryClient.fetchQuery({
+        queryKey: linkKeys.detail(id),
+        queryFn: () => requestGetLinkDetails(id),
+      })
+
+      await queryClient.invalidateQueries({
+        queryKey: linkKeys.lists(),
+      })
+
+      openDrawer()
+    } catch (error) {
+      console.error('데이터를 가져오는 중 오류 발생:', error)
+    }
   }
 
   const handleOpenMoveLinkModal = () => {
@@ -69,6 +116,7 @@ export function LinkListContainer({
 
       {!isLinkDetailsLoading && (
         <Drawer
+          linkId={linkDetails?.id ?? 0}
           onMoveLinkModalOpen={handleOpenMoveLinkModal}
           categoryColor={linkDetails?.reference?.colorCode ?? ''}
           categoryName={linkDetails?.reference?.title ?? ''}
@@ -90,13 +138,13 @@ export function LinkListContainer({
     </div>
   ) : (
     <EmptyLinks
-      message={isSearchMode ? '찾는 링크가 없어요.' : '저장한 링크가 없어요.'}
+      message={emptyProps.message}
       className="h-240"
       imageProps={{
-        src: isSearchMode ? '/images/empty-link.png' : '/images/paper.png',
-        alt: isSearchMode ? 'empty link' : 'paper',
-        width: isSearchMode ? 92 : 57,
-        height: isSearchMode ? 71 : 57,
+        src: emptyProps.src,
+        alt: emptyProps.alt,
+        width: emptyProps.width,
+        height: emptyProps.height,
       }}
     />
   )

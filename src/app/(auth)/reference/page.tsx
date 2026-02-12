@@ -3,6 +3,7 @@
 import { useCreateReferenceFolderMutation } from '@/src/apis/query/reference/useCreateReferenceFolderMutation'
 import { useGetReferenceList } from '@/src/apis/query/reference/useGetReferenceList'
 import { Button } from '@/src/components/Button'
+import { EmptyLinks } from '@/src/components/EmptyLinks/EmptyLinks'
 import { CreateFolderModal } from '@/src/components/Modal/CreateFolderModal'
 import { Tab, Tabs } from '@/src/components/Tabs'
 import { REFERENCE_TABS } from '@/src/constants/defaultTap'
@@ -24,6 +25,7 @@ export default function Reference() {
     })
 
   const referenceList = data?.pages.flatMap((page) => page.data.contents) ?? []
+  const isEmpty = referenceList.length === 0 && !isFetchingNextPage
 
   const { bottomRef } = useIntersectionObserver({
     onIntersect: fetchNextPage,
@@ -75,7 +77,22 @@ export default function Reference() {
         />
       </div>
 
-      <ReferencFolderList data={referenceList} />
+      {isEmpty ? (
+        <div className="flex justify-center pt-100">
+          <EmptyLinks
+            message="찾는 링크가 없어요."
+            className="h-240"
+            imageProps={{
+              src: '/images/empty-link.png',
+              alt: 'empty reference',
+              width: 92,
+              height: 71,
+            }}
+          />
+        </div>
+      ) : (
+        <ReferencFolderList data={referenceList} />
+      )}
 
       <div ref={bottomRef} />
 

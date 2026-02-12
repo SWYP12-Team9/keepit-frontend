@@ -4,6 +4,7 @@ import { useGetFrequentReferences } from '@/src/apis/query/reference/useGetFrequ
 import { useIntersectionObserver } from '@/src/hooks/useIntersectionObserver'
 import { useAuthStore } from '@/src/store/authStore'
 import { cn } from '@/src/utils/cn'
+import { useRouter } from 'next/navigation'
 
 interface SidebarReferenceListProps {
   isExpanded: boolean
@@ -13,6 +14,7 @@ export default function SidebarReferenceList({
   isExpanded,
 }: SidebarReferenceListProps) {
   const { isLoggedIn } = useAuthStore()
+  const router = useRouter()
 
   const { data, fetchNextPage, hasNextPage, isFetchingNextPage } =
     useGetFrequentReferences(20)
@@ -23,6 +25,10 @@ export default function SidebarReferenceList({
     isFetching: isFetchingNextPage,
     rootMargin: '40px',
   })
+
+  const handleReferenceClick = (id: number) => {
+    router.push(`/reference/${id}`)
+  }
 
   if (!isExpanded) return null
 
@@ -45,6 +51,7 @@ export default function SidebarReferenceList({
               .map((ref) => (
                 <div
                   key={ref.id}
+                  onClick={() => handleReferenceClick(ref.id)}
                   className="group flex cursor-pointer items-center gap-5 py-4"
                 >
                   <div

@@ -11,6 +11,9 @@ export const usePatchReferenceMutation = () => {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: referenceKeys.lists() })
       queryClient.invalidateQueries({ queryKey: referenceKeys.details() })
+      queryClient.invalidateQueries({
+        queryKey: referenceKeys.frequentInfinite(),
+      })
     },
     onError: (error: AxiosError) => {
       console.log(error)

@@ -68,6 +68,13 @@ const saveLinkWithoutReferenceSchema = z.object({
   memo: z.string(),
 })
 
+export const createFolderSchema = z.object({
+  isPublic: z.boolean(),
+  title: z.string().min(1, '레퍼런스 폴더 이름을 입력해 주세요'),
+  colorCode: z.string().min(1, '색상을 선택해 주세요'),
+  description: z.string().optional(),
+})
+
 export const saveLinkRequestSchema = z.union([
   saveLinkWithNewReferenceSchema,
   saveLinkWithExistingReferenceSchema,
