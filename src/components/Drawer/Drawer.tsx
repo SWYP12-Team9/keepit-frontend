@@ -1,11 +1,14 @@
 'use client'
 
+import { usePatchLinkMutation } from '@/src/apis/query/link/usePatchLinkMutation'
+import { useDebounce } from '@/src/hooks/useDebounce'
+import { useDrawerStore } from '@/src/store/drawerStore'
 import Image from 'next/image'
+import { useEffect, useRef, useState } from 'react'
 import { Button } from '../Button'
 import { Input } from '../Input'
 import { TextArea } from '../TextArea'
 import { Field } from './Field'
-import { useDrawerStore } from '@/src/store/drawerStore'
 
 interface DrawerProps {
   onMoveLinkModalOpen: () => void
@@ -17,6 +20,7 @@ interface DrawerProps {
   link: string
   aiSummary: string
   defaultMemo: string
+  linkId: number
 }
 
 export function Drawer({
@@ -29,15 +33,43 @@ export function Drawer({
   link,
   aiSummary,
   defaultMemo,
+  linkId,
 }: DrawerProps) {
   const isOpen = useDrawerStore((state) => state.isOpen)
   const isClosing = useDrawerStore((state) => state.isClosing)
+  const { mutate: patchLink } = usePatchLinkMutation()
 
   const closeDrawer = useDrawerStore((state) => state.close)
   const resetValues = useDrawerStore((state) => state.resetValues)
 
   const setWhy = useDrawerStore((state) => state.setWhy)
   const setMemo = useDrawerStore((state) => state.setMemo)
+
+  const [localWhy, setLocalWhy] = useState(defaultWhy)
+  const [localMemo, setLocalMemo] = useState(defaultMemo)
+  const isInitialMount = useRef(true)
+
+  const debouncedWhy = useDebounce({ value: localWhy, delay: 800 })
+  const debouncedMemo = useDebounce({ value: localMemo, delay: 800 })
+
+  useEffect(() => {
+    if (!isOpen || !linkId) return
+
+    if (isInitialMount.current) {
+      isInitialMount.current = false
+      return
+    }
+
+    if (debouncedWhy !== defaultWhy || debouncedMemo !== defaultMemo) {
+      patchLink({
+        userLinkId: linkId,
+        body: {
+          why: debouncedWhy,
+          memo: debouncedMemo,
+        },
+      })
+    }
+  }, [debouncedWhy, debouncedMemo, linkId])
 
   const handleClose = () => {
     resetValues()
@@ -84,7 +116,7 @@ export function Drawer({
 
       <div className="scrollbar-hide flex flex-1 flex-col gap-20 overflow-y-auto pr-4">
         <Field label="제목" className="shrink-0">
-          <div className="rounded-8 bg-gray-field p-16">
+          <div className="rounded-8 bg-white p-16">
             <p className="text-caption-1 text-gray-default leading-relaxed">
               {title}
             </p>
@@ -95,19 +127,24 @@ export function Drawer({
           <Input
             defaultValue={defaultWhy}
             className="pr-80"
-            onChange={(e) => setWhy(e.target.value)}
+            onChange={(e) => {
+              const value = e.target.value
+              setLocalWhy(value)
+              setWhy(value)
+            }}
           />
         </Field>
 
         <Field label="링크" className="shrink-0">
-          <Input
-            defaultValue={link}
-            className="cursor-pointer text-blue-500 underline"
-          />
+          <div className="rounded-8 flex min-h-[54px] items-start bg-white p-16">
+            <p className="text-caption-1 text-gray-default leading-relaxed break-all">
+              {link}
+            </p>
+          </div>
         </Field>
 
         <Field label="Ai 핵심요약" className="shrink-0">
-          <div className="rounded-8 bg-gray-field p-16">
+          <div className="rounded-8 bg-white p-16">
             <p className="text-caption-1 text-gray-default leading-relaxed">
               {aiSummary}
             </p>
@@ -118,7 +155,11 @@ export function Drawer({
           <TextArea
             className="bg-gray-field h-200 resize-none border-none"
             defaultValue={defaultMemo}
-            onChange={(e) => setMemo(e.target.value)}
+            onChange={(e) => {
+              const value = e.target.value
+              setLocalMemo(value)
+              setMemo(value)
+            }}
           />
         </Field>
       </div>

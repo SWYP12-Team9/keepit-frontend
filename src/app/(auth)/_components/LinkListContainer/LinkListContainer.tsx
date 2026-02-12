@@ -116,6 +116,7 @@ export function LinkListContainer({
 
       {!isLinkDetailsLoading && (
         <Drawer
+          linkId={linkDetails?.id ?? 0}
           onMoveLinkModalOpen={handleOpenMoveLinkModal}
           categoryColor={linkDetails?.reference?.colorCode ?? ''}
           categoryName={linkDetails?.reference?.title ?? ''}
