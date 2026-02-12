@@ -33,11 +33,15 @@ export function StatCard({
         <span className="text-caption-2 text-gray-disabled">{date}</span>
       </div>
 
-      <div className="rounded-16 flex h-224 w-full shrink-0 items-center justify-center bg-white p-14">
-        {children}
+      <div className="rounded-16 flex h-224 w-full shrink-0 items-center justify-center overflow-hidden bg-white p-14">
+        <div className="flex w-full items-center justify-center">
+          {children}
+        </div>
       </div>
-      <div className="rounded-16 flex h-102 w-full shrink-0 items-center border border-indigo-100 bg-indigo-50 px-16 py-10">
-        <p className="text-body-2 text-gray-default">{description}</p>
+      <div className="rounded-16 flex h-102 w-full shrink-0 items-center overflow-hidden border border-indigo-100 bg-indigo-50 px-16 py-10">
+        <p className="text-body-2 text-gray-default line-clamp-3">
+          {description}
+        </p>
       </div>
     </div>
   )
