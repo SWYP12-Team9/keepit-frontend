@@ -10,6 +10,9 @@ export const useCreateReferenceFolderMutation = () => {
     mutationFn: requestPostReferenceFolder,
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: referenceKeys.lists() })
+      queryClient.invalidateQueries({
+        queryKey: referenceKeys.frequentInfinite(),
+      })
     },
     onError: (error: AxiosError) => {
       console.log(error)

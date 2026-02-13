@@ -10,6 +10,7 @@ export default function DrawerTest() {
     <>
       <button onClick={() => open()}>Drawer 열기</button>
       <Drawer
+        linkId={1}
         onMoveLinkModalOpen={() => {
           console.log('onMoveLinkModalOpen')
         }}

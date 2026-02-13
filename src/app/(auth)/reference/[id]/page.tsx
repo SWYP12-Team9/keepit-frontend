@@ -13,7 +13,7 @@ import { ALL_TAB } from '@/src/constants/defaultTap'
 import { useDebounce } from '@/src/hooks/useDebounce'
 import Image from 'next/image'
 import { useRouter } from 'next/navigation'
-import { use, useState } from 'react'
+import { use, useEffect, useRef, useState } from 'react'
 import { FieldValues } from 'react-hook-form'
 import { LinkListContainer } from '../../_components/LinkListContainer/LinkListContainer'
 import { SearchLinksInput } from '../../_components/SearchLinksInput/SearchLinksInput'
@@ -66,8 +66,45 @@ export default function ReferenceDetails({
   const folderDetail = isAllTab ? null : referenceDetailData?.data
 
   const [localIsPublic, setLocalIsPublic] = useState<boolean | null>(null)
+  const [localDescription, setLocalDescription] = useState<string | null>(null)
   const serverIsPublic = folderDetail?.isPublic
+  const serverDescription = folderDetail?.description
   const visibleIsPublic = localIsPublic ?? serverIsPublic
+  const visibleDescription =
+    localDescription !== null ? localDescription : (serverDescription ?? '')
+
+  const autoSaveValue = useDebounce({
+    value: { description: visibleDescription, isPublic: visibleIsPublic },
+    delay: 800,
+  })
+
+  const isInitialMount = useRef(true)
+
+  useEffect(() => {
+    if (!isAllTab && currentFolderId && folderDetail) {
+      if (isInitialMount.current) {
+        isInitialMount.current = false
+        return
+      }
+
+      if (
+        autoSaveValue.description === serverDescription &&
+        autoSaveValue.isPublic === serverIsPublic
+      ) {
+        return
+      }
+
+      patchReference({
+        referenceId: currentFolderId,
+        body: {
+          title: folderDetail.title,
+          colorCode: folderDetail.colorCode,
+          description: autoSaveValue.description ?? '',
+          isPublic: autoSaveValue.isPublic ?? true,
+        },
+      })
+    }
+  }, [autoSaveValue.description, autoSaveValue.isPublic])
 
   const linkList = isSearchMode
     ? (searchLinksData?.data?.contents ?? [])
@@ -143,17 +180,19 @@ export default function ReferenceDetails({
                   <h1 className="text-heading-3 text-gray-default">
                     {folderDetail?.title}
                   </h1>
-                  <button
-                    className="flex h-24 w-24 items-center justify-center"
-                    onClick={handleEdit}
-                  >
-                    <Image
-                      src="/icons/edit.svg"
-                      alt="edit"
-                      width={20}
-                      height={20}
-                    />
-                  </button>
+                  {!folderDetail?.isDefault && (
+                    <button
+                      className="flex h-24 w-24 items-center justify-center"
+                      onClick={handleEdit}
+                    >
+                      <Image
+                        src="/icons/edit.svg"
+                        alt="edit"
+                        width={20}
+                        height={20}
+                      />
+                    </button>
+                  )}
                 </div>
 
                 {visibleIsPublic !== undefined && (
@@ -170,8 +209,8 @@ export default function ReferenceDetails({
                 </span>
                 <TextArea
                   className="rounded-8 text-body-3 text-gray-default bg-gray-field h-[95px] shrink-0 px-20 py-14"
-                  value={folderDetail?.description ?? ''}
-                  onChange={() => {}}
+                  value={visibleDescription}
+                  onChange={(e) => setLocalDescription(e.target.value)}
                 />
               </div>
             </div>
@@ -192,6 +231,7 @@ export default function ReferenceDetails({
           isLoading={isLoading}
           isSearchMode={isSearchMode}
           showTitle={false}
+          isReferenceDetail={true}
         />
       </div>
       <CreateFolderModal
