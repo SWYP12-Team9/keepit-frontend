@@ -14,13 +14,6 @@ export function SidebarFooter({ isExpanded }: { isExpanded: boolean }) {
   const [isLogoutModalOpen, setIsLogoutModalOpen] = useState(false)
   const [isSettingsModalOpen, setIsSettingsModalOpen] = useState(false)
 
-  const loginProviders = [
-    {
-      name: 'kakao',
-      icon: '/icons/kakao.svg',
-    },
-  ]
-
   const handleLogin = (provider: string) => {
     const targetUrl = `${process.env.NEXT_PUBLIC_BASE_URL}/oauth2/authorization/${provider}`
     window.location.assign(targetUrl)
@@ -32,23 +25,59 @@ export function SidebarFooter({ isExpanded }: { isExpanded: boolean }) {
     setIsLogoutModalOpen(false)
   }
 
+  const loginProviders = [
+    {
+      name: 'kakao',
+      bgColor: 'bg-[#FEE500]',
+      icon: '/icons/kakao.svg',
+      size: 'h-44 w-44',
+      padding: '',
+    },
+    {
+      name: 'naver',
+      bgColor: 'bg-[#03C75A]',
+      icon: '/icons/naver.svg',
+      size: 'h-21 w-21',
+      padding: 'p-[1px]',
+    },
+    {
+      name: 'google',
+      bgColor: 'bg-[#EEEEEE]',
+      icon: '/icons/google.svg',
+      size: 'h-24 w-24',
+      padding: 'p-[1px]',
+    },
+  ]
+
   if (!isLoggedIn) {
     return (
       <div className="mt-auto flex w-full flex-col items-center px-[20px] pt-60 pb-50">
-        <span className="text-body-2 text-gray-disabled mb-8">간편 로그인</span>
+        <span className="text-body-4 mb-12 text-[#5f5e5b]">간편 로그인</span>
 
-        <div className="mb-12 h-[1px] w-full bg-black/16" />
+        <div className="mb-16 h-[1px] w-full bg-[#E5E5E5]" />
 
-        {loginProviders.map((social) => (
-          <button
-            key={social.name}
-            onClick={() => handleLogin(social.name)}
-            className="flex h-44 w-44 items-center justify-center rounded-full"
-            aria-label={`${social.name} login`}
-          >
-            <Image src={social.icon} alt={social.name} width={44} height={44} />
-          </button>
-        ))}
+        <div className="flex gap-12">
+          {loginProviders.map((social) => (
+            <button
+              key={social.name}
+              onClick={() => handleLogin(social.name)}
+              className={cn(
+                'flex h-44 w-44 items-center justify-center overflow-hidden rounded-full transition-transform active:scale-[0.92]',
+                social.bgColor,
+              )}
+              aria-label={`${social.name} login`}
+            >
+              <div className={cn('relative', social.size)}>
+                <Image
+                  src={social.icon}
+                  alt={social.name}
+                  fill
+                  className={cn('object-contain', social.padding)}
+                />
+              </div>
+            </button>
+          ))}
+        </div>
       </div>
     )
   }

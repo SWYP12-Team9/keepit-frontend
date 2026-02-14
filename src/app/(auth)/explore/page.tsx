@@ -6,13 +6,35 @@ import { useGetSearchOtherUserLinks } from '@/src/apis/query/recommendation/useG
 import { Tab, Tabs } from '@/src/components/Tabs'
 import { ALL_TAB } from '@/src/constants/defaultTap'
 import { useDebounce } from '@/src/hooks/useDebounce'
+import { useRouter, usePathname, useSearchParams } from 'next/navigation'
 import { useState } from 'react'
 import { SearchLinksInput } from '../_components/SearchLinksInput/SearchLinksInput'
 import { OtherUserLinksContainer } from './_components/OtherUserLinksContainer/OtherUserLinksContainer'
+import { LoginModal } from '@/src/components/LoginModal'
+import { useAuthStore } from '@/src/store/authStore'
 
 export default function ExplorePage() {
+  const searchParams = useSearchParams()
+  const pathname = usePathname()
+  const router = useRouter()
+  const { isLoggedIn } = useAuthStore()
+
   const [selectedTab, setSelectedTab] = useState<Tab>(ALL_TAB)
   const [searchKeyword, setSearchKeyword] = useState('')
+  const [isLoginModalOpen, setIsLoginModalOpen] = useState(
+    !isLoggedIn && searchParams.get('login') === 'true',
+  )
+
+  const handleLoginModalChange = (open: boolean) => {
+    setIsLoginModalOpen(open)
+    if (!open) {
+      const params = new URLSearchParams(searchParams.toString())
+      params.delete('login')
+      router.replace(
+        `${pathname}${params.toString() ? `?${params.toString()}` : ''}`,
+      )
+    }
+  }
 
   const debouncedKeyword = useDebounce({
     value: searchKeyword,
@@ -40,7 +62,7 @@ export default function ExplorePage() {
     ? (searchOtherUserLinks?.data ?? [])
     : (otherUserLinkListData?.data ?? [])
 
-  const tabs = categories?.data.map((category, index) => ({
+  const tabs = categories?.data.map((category: string, index: number) => ({
     id: index,
     title: category,
   }))
@@ -70,13 +92,20 @@ export default function ExplorePage() {
         />
       </div>
 
-      <OtherUserLinksContainer
-        otherUserLinkList={otherUserLinkList}
-        isLoading={
-          isSearchMode
-            ? isSearchOtherUserLinksLoading
-            : isOtherUserLinkListLoading
-        }
+      <div>
+        <OtherUserLinksContainer
+          otherUserLinkList={otherUserLinkList}
+          isLoading={
+            isSearchMode
+              ? isSearchOtherUserLinksLoading
+              : isOtherUserLinkListLoading
+          }
+        />
+      </div>
+
+      <LoginModal
+        isOpen={isLoginModalOpen}
+        onOpenChange={handleLoginModalChange}
       />
     </main>
   )

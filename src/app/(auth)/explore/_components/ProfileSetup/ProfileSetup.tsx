@@ -17,13 +17,15 @@ export function ProfileSetup() {
   const pathname = usePathname()
 
   const { isOpen, open, close } = useProfileSetupStore()
+  const { isLoggedIn } = useAuthStore()
 
   useEffect(() => {
     const isNewUser = searchParams.get('isNewUser') === 'true'
-    if (isNewUser) {
+    // 로그인 되어있고 + /explore 페이지이고 + 신규유저일 때만 프로필 모달 열기
+    if (isLoggedIn && isNewUser && pathname === '/explore') {
       open()
     }
-  }, [searchParams, open])
+  }, [searchParams, pathname, isLoggedIn, open])
 
   const { mutate: postProfile } = usePostProfileMutation()
   const login = useAuthStore((state) => state.login)
@@ -54,7 +56,9 @@ export function ProfileSetup() {
     )
   }
 
-  if (!isOpen) return null
+  const isLoginParam = searchParams.get('login') === 'true'
+
+  if (pathname !== '/explore' || !isOpen || isLoginParam) return null
 
   return (
     <ProfileModal
