@@ -36,6 +36,10 @@ export default function SidebarProfile({
             <span className="text-body-3 text-gray-default font-medium">
               {user.nickname}님
             </span>
+          ) : isLoggedIn ? (
+            <span className="text-body-3 text-gray-default">
+              회원 정보 설정 중
+            </span>
           ) : (
             <Link href="/login" className="text-body-3 text-gray-default">
               로그인이 필요합니다

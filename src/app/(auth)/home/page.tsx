@@ -6,6 +6,7 @@ import { useGetReferenceList } from '@/src/apis/query/reference/useGetReferenceL
 import { Tab, Tabs } from '@/src/components/Tabs'
 import { ALL_TAB } from '@/src/constants/defaultTap'
 import { useDebounce } from '@/src/hooks/useDebounce'
+import { useAuthStore } from '@/src/store/authStore'
 import { useDrawerStore } from '@/src/store/drawerStore'
 import { useState } from 'react'
 import { LinkListContainer } from '../_components/LinkListContainer/LinkListContainer'
@@ -13,6 +14,7 @@ import { SearchLinksInput } from '../_components/SearchLinksInput/SearchLinksInp
 import { SaveLinkInput } from './_components/SaveLinkInput/SaveLinkInput'
 
 export default function Home() {
+  const { isLoggedIn } = useAuthStore()
   const [searchKeyword, setSearchKeyword] = useState('')
   const [selectedTab, setSelectedTab] = useState<Tab | null>(ALL_TAB)
   const closeDrawer = useDrawerStore((state) => state.close)
@@ -26,20 +28,27 @@ export default function Home() {
 
   const { data: linkListData, isLoading: isLinkListLoading } = useGetLinkList(
     selectedTab?.id === 'all' ? {} : { referenceId: selectedTab?.id },
+    { enabled: isLoggedIn },
   )
 
   const { data: searchLinksData, isLoading: isSearchLinksLoading } =
-    useGetSearchLinks({
-      keyword: debouncedKeyword,
-      referenceId: selectedTab?.id === 'all' ? undefined : selectedTab?.id,
-      size: 20,
-    })
+    useGetSearchLinks(
+      {
+        keyword: debouncedKeyword,
+        referenceId: selectedTab?.id === 'all' ? undefined : selectedTab?.id,
+        size: 20,
+      },
+      { enabled: isLoggedIn },
+    )
 
   const linkList = isSearchMode
     ? (searchLinksData?.data?.contents ?? [])
     : (linkListData?.data?.contents ?? [])
 
-  const { data: referenceList } = useGetReferenceList({ type: 'all' })
+  const { data: referenceList } = useGetReferenceList({
+    type: 'all',
+    enabled: isLoggedIn,
+  })
 
   const tabs =
     referenceList?.pages.flatMap((page) =>
@@ -87,6 +96,7 @@ export default function Home() {
         linkList={linkList}
         isLoading={isSearchMode ? isSearchLinksLoading : isLinkListLoading}
         isSearchMode={isSearchMode}
+        requireLoginMessage={isLoggedIn ? undefined : '로그인이 필요합니다'}
       />
     </div>
   )

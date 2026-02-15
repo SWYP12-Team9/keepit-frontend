@@ -17,6 +17,7 @@ interface LinkListContainerProps {
   isSearchMode: boolean
   showTitle?: boolean
   isReferenceDetail?: boolean
+  requireLoginMessage?: string
 }
 
 export function LinkListContainer({
@@ -25,6 +26,7 @@ export function LinkListContainer({
   isSearchMode,
   showTitle = true,
   isReferenceDetail = false,
+  requireLoginMessage,
 }: LinkListContainerProps) {
   const queryClient = useQueryClient()
   const [selectedLinkId, setSelectedLinkId] = useState<number | null>(null)
@@ -95,6 +97,10 @@ export function LinkListContainer({
 
   const handleOpenMoveLinkModal = () => {
     setMoveLinkModalOpen(true)
+  }
+
+  if (requireLoginMessage) {
+    return <div className="pt-35 text-center">{requireLoginMessage}</div>
   }
 
   return isLoading ? (
