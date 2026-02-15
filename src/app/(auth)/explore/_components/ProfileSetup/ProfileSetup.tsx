@@ -17,15 +17,38 @@ export function ProfileSetup() {
   const pathname = usePathname()
 
   const { isOpen, open, close } = useProfileSetupStore()
-  const { isLoggedIn } = useAuthStore()
+  const { isLoggedIn, user } = useAuthStore()
 
   useEffect(() => {
     const isNewUser = searchParams.get('isNewUser') === 'true'
-    // 로그인 되어있고 + /explore 페이지이고 + 신규유저일 때만 프로필 모달 열기
-    if (isLoggedIn && isNewUser && pathname === '/explore') {
+    const hasNicknameInStore = Boolean(user?.nickname?.trim())
+
+    if (!isLoggedIn || pathname !== '/explore') return
+
+    if (isNewUser) {
       open()
+      return
     }
-  }, [searchParams, pathname, isLoggedIn, open])
+
+    // 기존 유저인데 이전 상태로 모달이 열려 있으면 정리
+    if (isOpen && hasNicknameInStore) {
+      close()
+    }
+
+    if (isOpen && !hasNicknameInStore) {
+      close()
+      return
+    }
+  }, [
+    close,
+    isLoggedIn,
+    isOpen,
+    open,
+    pathname,
+    router,
+    searchParams,
+    user?.nickname,
+  ])
 
   const { mutate: postProfile } = usePostProfileMutation()
   const login = useAuthStore((state) => state.login)
