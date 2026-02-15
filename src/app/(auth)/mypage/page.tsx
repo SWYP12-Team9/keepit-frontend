@@ -4,16 +4,32 @@ import { useGetMyPageStats } from '@/src/apis/query/mypage/useGetMyPageStats'
 import { useGetUserInfo } from '@/src/apis/query/user/useGetUserInfo'
 import { usePatchUserProfileMutation } from '@/src/apis/query/user/usePatchUserProfile'
 import { ProfileModal } from '@/src/components/Modal/ProfileModal'
+import { useAuthStore } from '@/src/store/authStore'
 import Image from 'next/image'
 import { useState } from 'react'
 import { ReadStateCard } from './_components/ReadStateCard/ReadStateCard'
 import { SavePatternCard } from './_components/SavePatternCard/SavePatternCard'
 import { TopReferencesCard } from './_components/TopReferenceCard/TopReferenceCard'
 export default function MyPage() {
-  const { data: userStats, isLoading, error } = useGetMyPageStats()
+  const { isLoggedIn } = useAuthStore()
+  const {
+    data: userStats,
+    isLoading,
+    error,
+  } = useGetMyPageStats({
+    enabled: isLoggedIn,
+  })
   const { mutate: updateProfile } = usePatchUserProfileMutation()
-  const { data: userInfo } = useGetUserInfo()
+  const { data: userInfo } = useGetUserInfo({ enabled: isLoggedIn })
   const [isProfileModalOpen, setIsProfileModalOpen] = useState(false)
+
+  if (!isLoggedIn) {
+    return (
+      <div className="flex h-full items-center justify-center">
+        <p className="text-gray-600">로그인이 필요합니다</p>
+      </div>
+    )
+  }
 
   if (isLoading) {
     return (

@@ -5,9 +5,17 @@ import {
 } from '../../request/requestGetLinkList'
 import { linkKeys } from './linkKeys'
 
-export const useGetLinkList = ({ referenceId }: RequestGetLinkListParams) => {
+interface UseGetLinkListOptions {
+  enabled?: boolean
+}
+
+export const useGetLinkList = (
+  { referenceId }: RequestGetLinkListParams,
+  options?: UseGetLinkListOptions,
+) => {
   return useQuery({
     queryKey: linkKeys.list(referenceId),
     queryFn: () => requestGetLinkList({ referenceId }),
+    enabled: options?.enabled ?? true,
   })
 }
