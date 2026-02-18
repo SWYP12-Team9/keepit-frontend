@@ -44,28 +44,38 @@ export default function ExplorePage() {
   const isSearchMode = debouncedKeyword.trim().length > 0
 
   const { data: categories } = useGetCategories()
-  const { data: otherUserLinkListData, isLoading: isOtherUserLinkListLoading } =
-    useGetOtherUserLinkList({
-      category: selectedTab?.id === 'all' ? undefined : selectedTab.title,
-      size: 20,
-    })
+
+  const isAllTab = selectedTab?.id === 'all' || selectedTab?.title === '전체'
+
+  const {
+    data: otherUserLinkListData,
+    isLoading: isOtherUserLinkListLoading,
+    fetchNextPage,
+    hasNextPage,
+    isFetchingNextPage,
+  } = useGetOtherUserLinkList({
+    category: isAllTab ? null : selectedTab.title,
+    size: 20,
+  })
 
   const {
     data: searchOtherUserLinks,
     isLoading: isSearchOtherUserLinksLoading,
   } = useGetSearchOtherUserLinks({
     keyword: debouncedKeyword,
-    size: 20,
+    size: 10,
   })
 
   const otherUserLinkList = isSearchMode
     ? (searchOtherUserLinks?.data ?? [])
-    : (otherUserLinkListData?.data ?? [])
+    : (otherUserLinkListData?.pages.flatMap((page) => page.data.contents) ?? [])
 
-  const tabs = categories?.data.map((category: string, index: number) => ({
-    id: index,
-    title: category,
-  }))
+  const tabs = categories?.data
+    .filter((category: string) => category !== '전체')
+    .map((category: string, index: number) => ({
+      id: index,
+      title: category,
+    }))
 
   const handleSearchChange = (value: string) => {
     setSearchKeyword(value)
@@ -92,7 +102,7 @@ export default function ExplorePage() {
         />
       </div>
 
-      <div>
+      <div className="h-full min-h-0 flex-1">
         <OtherUserLinksContainer
           otherUserLinkList={otherUserLinkList}
           isLoading={
@@ -100,6 +110,9 @@ export default function ExplorePage() {
               ? isSearchOtherUserLinksLoading
               : isOtherUserLinkListLoading
           }
+          isFetchingNextPage={isFetchingNextPage}
+          onLoadMore={isSearchMode ? undefined : fetchNextPage}
+          hasMore={isSearchMode ? false : hasNextPage}
         />
       </div>
 

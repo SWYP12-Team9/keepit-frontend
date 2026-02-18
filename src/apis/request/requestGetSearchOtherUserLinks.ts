@@ -11,11 +11,15 @@ export type RequestGetSearchOtherUserLinksResponse = BaseResponse<
   OtherUserLinkItem[]
 >
 
-export const requestGetSearchOtherUserLinks = async (
-  params: RequestGetSearchOtherUserLinksParams,
-): Promise<RequestGetSearchOtherUserLinksResponse> => {
+export const requestGetSearchOtherUserLinks = async ({
+  keyword,
+  size = 10,
+}: RequestGetSearchOtherUserLinksParams): Promise<RequestGetSearchOtherUserLinksResponse> => {
   const res = await axiosInstance.get('/recommendations/search', {
-    params,
+    params: {
+      keyword,
+      size,
+    },
   })
 
   return res.data

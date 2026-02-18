@@ -1,4 +1,4 @@
-import { useQuery } from '@tanstack/react-query'
+import { useInfiniteQuery } from '@tanstack/react-query'
 import {
   requestGetOtherUserLinkList,
   RequestGetOtherUserLinkListParams,
@@ -6,10 +6,16 @@ import {
 import { recommendationKeys } from './recommendationKeys'
 
 export const useGetOtherUserLinkList = (
-  params: RequestGetOtherUserLinkListParams,
+  params: Omit<RequestGetOtherUserLinkListParams, 'cursor'>,
 ) => {
-  return useQuery({
+  return useInfiniteQuery({
     queryKey: recommendationKeys.otherUserLinkList(params),
-    queryFn: () => requestGetOtherUserLinkList(params),
+    queryFn: ({ pageParam }) =>
+      requestGetOtherUserLinkList({ ...params, cursor: pageParam }),
+    initialPageParam: null as string | number | null,
+    getNextPageParam: (lastPage) => {
+      const { hasNext, nextCursor } = lastPage.data
+      return hasNext ? nextCursor : undefined
+    },
   })
 }
