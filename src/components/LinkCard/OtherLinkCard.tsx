@@ -21,8 +21,8 @@ export function OtherLinkCard({ data }: OtherLinkCardProps) {
       }
       footer={
         <OtherLinkCardFooter
-          nickname={data.user.nickname}
-          profileImageUrl={data.user.profileImageUrl}
+          nickname={data?.user?.nickname ?? ''}
+          profileImageUrl={data?.user?.profileImageUrl ?? ''}
         />
       }
     />
