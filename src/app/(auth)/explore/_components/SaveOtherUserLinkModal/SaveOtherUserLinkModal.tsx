@@ -1,7 +1,6 @@
 import { OtherUserLinkItem } from '@/src/types/recommendations/recommendations'
 import Image from 'next/image'
 import { Input } from '@/src/components/Input'
-import { TextArea } from '@/src/components/TextArea'
 import { Button } from '@/src/components/Button'
 import { useSaveLinkModalStore } from '@/src/store/saveLinkModalStore'
 
@@ -26,16 +25,16 @@ export function SaveOtherUserLinkModal({
   }
 
   return (
-    <div className="fixed inset-0 z-50 flex justify-end">
+    <div className="pointer-events-none fixed inset-0 z-50 flex justify-end">
       <button
         type="button"
         aria-label="상세 보기 닫기"
         onClick={onClose}
-        className="absolute inset-0 bg-black/30 md:hidden"
+        className="pointer-events-auto absolute inset-0 bg-transparent"
       />
 
       <div
-        className="relative z-10 flex h-dvh w-full max-w-[405px] flex-col overflow-hidden bg-white p-20 shadow-xl md:p-30"
+        className="pointer-events-auto relative z-10 flex h-dvh w-full max-w-[405px] flex-col overflow-hidden bg-white p-20 shadow-xl md:p-30"
         onClick={(e) => e.stopPropagation()}
       >
         <Image
@@ -58,11 +57,11 @@ export function SaveOtherUserLinkModal({
           </div>
           <div className="flex flex-col gap-12">
             <label className="text-body-1 text-gray-default">Ai 핵심요약</label>
-            <TextArea
-              height="h-130"
-              defaultValue={data.aiSummary}
-              className="bg-gray-field"
-            />
+            <div className="rounded-8 bg-gray-field min-h-[130px] px-20 py-14">
+              <p className="text-caption-1 text-gray-default leading-relaxed break-all whitespace-pre-wrap">
+                {data.aiSummary || 'AI 요약 없음'}
+              </p>
+            </div>
           </div>
         </div>
 
