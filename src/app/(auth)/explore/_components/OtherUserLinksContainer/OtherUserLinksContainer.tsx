@@ -70,12 +70,10 @@ export function OtherUserLinksContainer({
       </div>
 
       {selectedLink && (
-        <div className="absolute top-0 left-0 z-40">
-          <SaveOtherUserLinkModal
-            data={selectedLink}
-            onClose={() => setSelectedLink(null)}
-          />
-        </div>
+        <SaveOtherUserLinkModal
+          data={selectedLink}
+          onClose={() => setSelectedLink(null)}
+        />
       )}
     </div>
   ) : (
