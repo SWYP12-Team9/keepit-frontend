@@ -18,7 +18,7 @@ export function SaveLinkInput() {
     <div className="relative">
       <Input
         className="rounded-20 text-body-1 px-40"
-        height="h-100"
+        height="h-84 md:h-100"
         placeholder="다시 쓰고 싶은 링크를 넣어 보세요"
         value={url}
         onChange={(e) => setUrl(e.target.value)}
@@ -27,9 +27,9 @@ export function SaveLinkInput() {
       <Image
         src="/icons/share.svg"
         alt="share"
-        width={40}
-        height={40}
-        className="absolute top-1/2 right-40 -translate-y-1/2 cursor-pointer"
+        width={32}
+        height={32}
+        className="absolute top-1/2 right-20 -translate-y-1/2 cursor-pointer md:right-40"
         onClick={() => openSaveLinkModal(url)}
       />
     </div>

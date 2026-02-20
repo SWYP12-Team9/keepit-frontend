@@ -8,10 +8,12 @@ import { useRouter } from 'next/navigation'
 
 interface SidebarReferenceListProps {
   isExpanded: boolean
+  onNavigate?: () => void
 }
 
 export default function SidebarReferenceList({
   isExpanded,
+  onNavigate,
 }: SidebarReferenceListProps) {
   const { isLoggedIn } = useAuthStore()
   const router = useRouter()
@@ -28,6 +30,7 @@ export default function SidebarReferenceList({
 
   const handleReferenceClick = (id: number) => {
     router.push(`/reference/${id}`)
+    onNavigate?.()
   }
 
   if (!isExpanded) return null

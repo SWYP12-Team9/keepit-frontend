@@ -84,7 +84,7 @@ export function Drawer({
 
   return isOpen ? (
     <div
-      className={`fixed top-0 right-0 z-50 flex h-screen w-[405px] flex-col overflow-hidden bg-white p-30 shadow-xl ${
+      className={`fixed top-0 right-0 z-50 flex h-dvh w-full max-w-[405px] flex-col overflow-hidden bg-white p-20 shadow-xl md:p-30 ${
         isClosing ? 'animate-drawer-out' : 'animate-drawer-in'
       }`}
     >

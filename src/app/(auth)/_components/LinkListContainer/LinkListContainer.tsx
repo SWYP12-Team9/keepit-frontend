@@ -33,7 +33,6 @@ export function LinkListContainer({
   const [isMoveLinkModalOpen, setMoveLinkModalOpen] = useState(false)
 
   const openDrawer = useDrawerStore((state) => state.open)
-  const initializeValues = useDrawerStore((state) => state.initializeValues)
 
   const { mutateAsync: deleteLink } = useDeleteLinkMutation()
   const { data: linkDetailsData, isLoading: isLinkDetailsLoading } =
@@ -114,7 +113,11 @@ export function LinkListContainer({
       )}
       <div className="flex flex-wrap gap-10">
         {linkList.map((item: LinkItem | SearchLinkItem) => (
-          <div key={item.id} onClick={() => handleOpenLinkDetail(item.id)}>
+          <div
+            key={item.id}
+            onClick={() => handleOpenLinkDetail(item.id)}
+            className="w-full sm:w-auto"
+          >
             <MyLinkCard data={item} onDelete={handleDelete} />
           </div>
         ))}

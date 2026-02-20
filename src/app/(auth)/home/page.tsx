@@ -68,8 +68,8 @@ export default function Home() {
   }
 
   return (
-    <div className="scrollbar-hide h-full overflow-y-auto px-84">
-      <h1 className="text-display-2 text-gray-default pb-38">
+    <div className="scrollbar-hide h-full overflow-y-auto px-16 md:px-84">
+      <h1 className="text-heading-1 text-gray-default md:text-display-2 pb-28 md:pb-38">
         Save Links.
         <br />
         Use them again.
@@ -77,7 +77,7 @@ export default function Home() {
 
       <SaveLinkInput />
 
-      <div className="sticky top-0 z-10 mt-25 bg-white">
+      <div className="sticky top-0 z-10 mt-20 bg-white md:mt-25">
         <SearchLinksInput
           value={searchKeyword}
           placeholder="왜 저장했는지로 검색해 보세요"

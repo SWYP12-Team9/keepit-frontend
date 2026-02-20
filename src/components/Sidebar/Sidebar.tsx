@@ -16,14 +16,19 @@ const navItems = [
   { icon: NavMypage, label: '마이페이지', href: '/mypage' },
 ]
 
-export function Sidebar() {
+interface SidebarProps {
+  forceExpanded?: boolean
+  onNavigate?: () => void
+}
+
+export function Sidebar({ forceExpanded, onNavigate }: SidebarProps) {
   const isDrawerOpen = useDrawerStore((state) => state.isOpen)
-  const isExpanded = !isDrawerOpen
+  const isExpanded = forceExpanded ?? !isDrawerOpen
 
   return (
     <aside
       className={cn(
-        'bg-blue-light flex h-screen flex-col pb-[30px]',
+        'bg-blue-light flex h-full min-h-0 flex-col pb-[30px]',
         isExpanded ? 'w-[240px] px-10' : 'w-[62px] items-center px-0',
       )}
     >
@@ -31,14 +36,22 @@ export function Sidebar() {
       <SidebarProfile isExpanded={isExpanded} />
       <nav className="shrink-0 space-y-2">
         {navItems.map((item, index) => (
-          <SidebarNav key={index} {...item} isExpanded={isExpanded} />
+          <SidebarNav
+            key={index}
+            {...item}
+            isExpanded={isExpanded}
+            onNavigate={onNavigate}
+          />
         ))}
       </nav>
       <div className="flex-1" />
       <div className="flex shrink-0 flex-col">
         {isExpanded && <div className="bg-gray-white mx-[10px] h-[1px]" />}
         <div className="max-h-[250px] overflow-hidden">
-          <SidebarReferenceListList isExpanded={isExpanded} />
+          <SidebarReferenceListList
+            isExpanded={isExpanded}
+            onNavigate={onNavigate}
+          />
         </div>
         <div className="mt-[20px]">
           <SidebarFooter isExpanded={isExpanded} />

@@ -8,7 +8,7 @@ export function OpenSaveLinkButton() {
 
   return (
     <button
-      className="absolute right-40 bottom-40 cursor-pointer"
+      className="absolute right-16 bottom-20 cursor-pointer md:right-40 md:bottom-40"
       onClick={() => openSaveLinkModal()}
     >
       <Image

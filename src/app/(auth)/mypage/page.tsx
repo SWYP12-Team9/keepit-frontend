@@ -33,9 +33,9 @@ export default function MyPage() {
 
   if (isLoading) {
     return (
-      <div className="h-full bg-gray-50 p-24">
+      <div className="h-full bg-gray-50 p-16 md:p-24">
         <div className="mx-auto max-w-6xl">
-          <div className="grid grid-cols-3 gap-24">
+          <div className="grid grid-cols-1 gap-24 md:grid-cols-3">
             {[1, 2, 3].map((i) => (
               <div
                 key={i}
@@ -80,10 +80,10 @@ export default function MyPage() {
   const { topReferences, readState, savePattern } = userStats.data
 
   return (
-    <div className="h-full overflow-x-hidden overflow-y-auto">
-      <div className="flex min-h-full flex-col">
+    <div className="h-full min-h-0 flex-1 overflow-x-hidden overflow-y-auto">
+      <div className="mx-auto flex min-h-full w-full max-w-[1280px] flex-col">
         {/* 배경 이미지 섹션 */}
-        <div className="relative h-[200px] w-full shrink-0 px-29 pt-29">
+        <div className="relative h-[180px] w-full shrink-0 px-16 pt-16 md:h-[200px] md:px-29 md:pt-29">
           <div className="rounded-20 relative h-full w-full overflow-hidden">
             <Image
               src={
@@ -98,8 +98,8 @@ export default function MyPage() {
         </div>
 
         {/* 프로필 및 통계 카드 섹션 */}
-        <div className="px-24">
-          <div className="relative -mt-50 mb-32 ml-50">
+        <div className="px-16 md:px-24">
+          <div className="relative -mt-42 mb-32 ml-0 md:-mt-50 md:ml-50">
             <div className="relative mb-18 w-fit">
               <div className="relative h-75 w-75 overflow-hidden rounded-full border-4 border-white bg-white">
                 <Image
@@ -123,8 +123,8 @@ export default function MyPage() {
               </button>
             </div>
 
-            <div className="mb-10 flex items-center gap-12">
-              <h1 className="text-heading-3 text-gray-default">
+            <div className="mb-10 flex min-w-0 items-center gap-12">
+              <h1 className="text-heading-3 text-gray-default truncate">
                 {userInfo.data.nickname}
               </h1>
               <button
@@ -140,7 +140,7 @@ export default function MyPage() {
               </button>
             </div>
 
-            <p className="text-body-2 text-gray-default mb-32">
+            <p className="text-body-2 text-gray-default mb-32 break-words">
               {userInfo.data.introduction || '반갑습니다'}
             </p>
 
