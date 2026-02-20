@@ -91,19 +91,17 @@ export function Drawer({
   }
 
   return isOpen ? (
-    <div className="fixed inset-0 z-50 flex justify-end md:items-center md:justify-center md:px-24 md:py-20">
+    <div className="fixed inset-0 z-50 flex justify-end">
       <button
         type="button"
         aria-label="상세 보기 닫기"
         onClick={handleClose}
-        className="absolute inset-0 bg-black/30 md:bg-black/15"
+        className="absolute inset-0 bg-black/30 md:hidden"
       />
 
       <div
-        className={`md:rounded-20 relative z-10 flex h-dvh w-full max-w-[405px] flex-col overflow-hidden bg-white p-20 shadow-xl md:h-[min(860px,calc(100dvh-40px))] md:max-w-[960px] md:p-30 ${
-          isClosing
-            ? 'animate-drawer-out md:animate-none'
-            : 'animate-drawer-in md:animate-none'
+        className={`relative z-10 flex h-dvh w-full max-w-[405px] flex-col overflow-hidden bg-white p-20 shadow-xl md:p-30 ${
+          isClosing ? 'animate-drawer-out' : 'animate-drawer-in'
         }`}
         onClick={(e) => e.stopPropagation()}
       >

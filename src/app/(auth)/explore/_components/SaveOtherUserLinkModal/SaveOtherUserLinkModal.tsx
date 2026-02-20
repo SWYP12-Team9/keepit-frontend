@@ -26,16 +26,16 @@ export function SaveOtherUserLinkModal({
   }
 
   return (
-    <div className="fixed inset-0 z-50 flex justify-end md:items-center md:justify-center md:px-24 md:py-20">
+    <div className="fixed inset-0 z-50 flex justify-end">
       <button
         type="button"
         aria-label="상세 보기 닫기"
         onClick={onClose}
-        className="absolute inset-0 bg-black/30 md:bg-black/15"
+        className="absolute inset-0 bg-black/30 md:hidden"
       />
 
       <div
-        className="md:rounded-20 relative z-10 flex h-dvh w-full max-w-[405px] flex-col overflow-hidden bg-white p-20 shadow-xl md:h-[min(760px,calc(100dvh-40px))] md:max-w-[900px] md:p-30"
+        className="relative z-10 flex h-dvh w-full max-w-[405px] flex-col overflow-hidden bg-white p-20 shadow-xl md:p-30"
         onClick={(e) => e.stopPropagation()}
       >
         <Image
@@ -50,11 +50,11 @@ export function SaveOtherUserLinkModal({
         <div className="scrollbar-hide mt-20 flex min-h-0 flex-1 flex-col gap-20 overflow-y-auto pr-4">
           <div className="flex flex-col gap-12">
             <label className="text-body-1 text-gray-default">제목 </label>
-            <Input width="w-full md:w-1/2" defaultValue={data.title} />
+            <Input width="w-full" defaultValue={data.title} />
           </div>
           <div className="flex flex-col gap-12">
             <label className="text-body-1 text-gray-default">링크</label>
-            <Input width="w-full md:w-1/2" defaultValue={data.url} />
+            <Input width="w-full" defaultValue={data.url} />
           </div>
           <div className="flex flex-col gap-12">
             <label className="text-body-1 text-gray-default">Ai 핵심요약</label>
