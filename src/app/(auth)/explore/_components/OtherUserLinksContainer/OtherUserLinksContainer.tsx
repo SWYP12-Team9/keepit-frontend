@@ -60,6 +60,7 @@ export function OtherUserLinksContainer({
             <li
               key={`${item.id}-${index}`}
               onClick={() => setSelectedLink(item)}
+              className="w-full sm:w-auto"
             >
               <OtherLinkCard data={item} />
             </li>

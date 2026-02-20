@@ -65,9 +65,9 @@ export default function Reference() {
   }
 
   return (
-    <div className="scrollbar-hide h-full overflow-y-auto px-84">
+    <div className="scrollbar-hide h-full overflow-y-auto px-16 md:px-84">
       <div className="sticky top-0 z-10 mt-25 bg-white">
-        <div className="flex items-end justify-between pb-16">
+        <div className="flex flex-col gap-12 pb-16 sm:flex-row sm:items-end sm:justify-between">
           <Tabs
             defaultTap={REFERENCE_TABS[0]}
             tabs={REFERENCE_TABS.slice(1)}
@@ -78,7 +78,7 @@ export default function Reference() {
 
           <Button
             onClick={handleCreateReferenceView}
-            width="w-172"
+            width="w-full sm:w-172"
             height="h-42"
           >
             레퍼런스 뷰 생성
@@ -98,11 +98,11 @@ export default function Reference() {
 
       {showGuestDefaultFolder ? (
         <div className="py-20">
-          <div className="grid w-full grid-cols-6 gap-x-29 gap-y-20">
+          <div className="grid w-full grid-cols-1 gap-x-29 gap-y-20 sm:grid-cols-2 lg:grid-cols-4 xl:grid-cols-6">
             <button
               type="button"
               onClick={() => setIsLoginModalOpen(true)}
-              className="rounded-10 relative flex h-[107px] min-w-[148px] cursor-pointer flex-col border border-[#EBEBEB] bg-white px-15 pt-16 pb-14 text-left shadow-[0px_0px_5px_0px_#EAEAEA]"
+              className="rounded-10 relative flex h-[107px] w-full min-w-0 cursor-pointer flex-col border border-[#EBEBEB] bg-white px-15 pt-16 pb-14 text-left shadow-[0px_0px_5px_0px_#EAEAEA]"
             >
               <div className="relative h-28 w-36">
                 <Image

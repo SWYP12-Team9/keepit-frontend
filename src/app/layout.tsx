@@ -1,4 +1,5 @@
 import localFont from 'next/font/local'
+import type { Viewport } from 'next'
 import './globals.css'
 
 import { UserInitializer } from './(auth)/_components/UserInitializer/UserInitializer'
@@ -27,6 +28,11 @@ const pretendard = localFont({
   variable: '--font-pretendard',
   display: 'swap',
 })
+
+export const viewport: Viewport = {
+  width: 'device-width',
+  initialScale: 1,
+}
 
 export default function RootLayout({
   children,

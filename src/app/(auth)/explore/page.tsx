@@ -86,7 +86,7 @@ export default function ExplorePage() {
   }
 
   return (
-    <main className="flex h-full flex-col overflow-y-hidden px-84">
+    <main className="flex h-full flex-col overflow-y-hidden px-16 md:px-84">
       <div className="shrink-0">
         <SearchLinksInput
           value={searchKeyword}
@@ -98,7 +98,7 @@ export default function ExplorePage() {
           tabs={tabs}
           selectedTab={selectedTab}
           onChange={handleTabChange}
-          className="py-30"
+          className="py-20 md:py-30"
         />
       </div>
 
