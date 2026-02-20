@@ -69,7 +69,15 @@ export function Drawer({
         },
       })
     }
-  }, [debouncedWhy, debouncedMemo, linkId])
+  }, [
+    debouncedMemo,
+    debouncedWhy,
+    defaultMemo,
+    defaultWhy,
+    isOpen,
+    linkId,
+    patchLink,
+  ])
 
   const handleClose = () => {
     resetValues()
@@ -83,105 +91,117 @@ export function Drawer({
   }
 
   return isOpen ? (
-    <div
-      className={`fixed top-0 right-0 z-50 flex h-dvh w-full max-w-[405px] flex-col overflow-hidden bg-white p-20 shadow-xl md:p-30 ${
-        isClosing ? 'animate-drawer-out' : 'animate-drawer-in'
-      }`}
-    >
-      <div className="mb-24 flex shrink-0 items-center justify-between">
-        <Image
-          src="../icons/close-tab.svg"
-          alt="close"
-          width={22}
-          height={22}
-          className="cursor-pointer"
-          onClick={handleClose}
-        />
-        <div className="flex items-center gap-[2px]">
-          <Image src="../icons/view.svg" alt="view" width={22} height={22} />
-          <span className="text-caption-1 text-gray-disabled mr-8">
-            {viewCount}
-          </span>
-          <span className="text-caption-2 text-gray-disabled">열람</span>
+    <div className="fixed inset-0 z-50 flex justify-end md:items-center md:justify-center md:px-24 md:py-20">
+      <button
+        type="button"
+        aria-label="상세 보기 닫기"
+        onClick={handleClose}
+        className="absolute inset-0 bg-black/30 md:bg-black/15"
+      />
+
+      <div
+        className={`md:rounded-20 relative z-10 flex h-dvh w-full max-w-[405px] flex-col overflow-hidden bg-white p-20 shadow-xl md:h-[min(860px,calc(100dvh-40px))] md:max-w-[960px] md:p-30 ${
+          isClosing
+            ? 'animate-drawer-out md:animate-none'
+            : 'animate-drawer-in md:animate-none'
+        }`}
+        onClick={(e) => e.stopPropagation()}
+      >
+        <div className="mb-24 flex shrink-0 items-center justify-between">
+          <Image
+            src="../icons/close-tab.svg"
+            alt="close"
+            width={22}
+            height={22}
+            className="cursor-pointer"
+            onClick={handleClose}
+          />
+          <div className="flex items-center gap-[2px]">
+            <Image src="../icons/view.svg" alt="view" width={22} height={22} />
+            <span className="text-caption-1 text-gray-disabled mr-8">
+              {viewCount}
+            </span>
+            <span className="text-caption-2 text-gray-disabled">열람</span>
+          </div>
         </div>
-      </div>
 
-      <div className="mb-[10px] flex shrink-0 items-center gap-8">
-        <div
-          className="rounded-4 h-[10px] w-[10px]"
-          style={{ backgroundColor: categoryColor }}
-        />
-        <span className="text-caption-1">{categoryName}</span>
-      </div>
-
-      <div className="scrollbar-hide flex flex-1 flex-col gap-20 overflow-y-auto pr-4">
-        <Field label="제목" className="shrink-0">
-          <div className="rounded-8 bg-white p-16">
-            <p className="text-caption-1 text-gray-default leading-relaxed">
-              {title}
-            </p>
-          </div>
-        </Field>
-
-        <Field label="이유" className="shrink-0">
-          <Input
-            defaultValue={defaultWhy}
-            className="pr-80"
-            onChange={(e) => {
-              const value = e.target.value
-              setLocalWhy(value)
-              setWhy(value)
-            }}
+        <div className="mb-[10px] flex shrink-0 items-center gap-8">
+          <div
+            className="rounded-4 h-[10px] w-[10px]"
+            style={{ backgroundColor: categoryColor }}
           />
-        </Field>
+          <span className="text-caption-1">{categoryName}</span>
+        </div>
 
-        <Field label="링크" className="shrink-0">
-          <div className="rounded-8 flex min-h-[54px] items-start bg-white p-16">
-            <p className="text-caption-1 text-gray-default leading-relaxed break-all">
-              {link}
-            </p>
-          </div>
-        </Field>
+        <div className="scrollbar-hide flex min-h-0 flex-1 flex-col gap-20 overflow-y-auto pr-4">
+          <Field label="제목" className="shrink-0">
+            <div className="rounded-8 bg-white p-16">
+              <p className="text-caption-1 text-gray-default leading-relaxed">
+                {title}
+              </p>
+            </div>
+          </Field>
 
-        <Field label="Ai 핵심요약" className="shrink-0">
-          <div className="rounded-8 bg-white p-16">
-            <p className="text-caption-1 text-gray-default leading-relaxed">
-              {aiSummary}
-            </p>
-          </div>
-        </Field>
+          <Field label="이유" className="shrink-0">
+            <Input
+              defaultValue={defaultWhy}
+              className="pr-80"
+              onChange={(e) => {
+                const value = e.target.value
+                setLocalWhy(value)
+                setWhy(value)
+              }}
+            />
+          </Field>
 
-        <Field label="메모" className="shrink-0">
-          <TextArea
-            className="bg-gray-field h-200 resize-none border-none"
-            defaultValue={defaultMemo}
-            onChange={(e) => {
-              const value = e.target.value
-              setLocalMemo(value)
-              setMemo(value)
-            }}
-          />
-        </Field>
-      </div>
+          <Field label="링크" className="shrink-0">
+            <div className="rounded-8 flex min-h-[54px] items-start bg-white p-16">
+              <p className="text-caption-1 text-gray-default leading-relaxed break-all">
+                {link}
+              </p>
+            </div>
+          </Field>
 
-      <div className="mt-20 flex shrink-0 gap-12">
-        <Button
-          variant="secondary"
-          width="w-full"
-          height="h-54"
-          onClick={handleOpenLink}
-        >
-          원문 열기
-        </Button>
-        <Button
-          variant="primary"
-          width="w-full"
-          height="h-54"
-          className="text-gray-default bg-blue-light-active"
-          onClick={onMoveLinkModalOpen}
-        >
-          레퍼런스 폴더 이동
-        </Button>
+          <Field label="Ai 핵심요약" className="shrink-0">
+            <div className="rounded-8 bg-white p-16">
+              <p className="text-caption-1 text-gray-default leading-relaxed">
+                {aiSummary}
+              </p>
+            </div>
+          </Field>
+
+          <Field label="메모" className="shrink-0">
+            <TextArea
+              className="bg-gray-field h-200 resize-none border-none"
+              defaultValue={defaultMemo}
+              onChange={(e) => {
+                const value = e.target.value
+                setLocalMemo(value)
+                setMemo(value)
+              }}
+            />
+          </Field>
+        </div>
+
+        <div className="mt-20 flex shrink-0 gap-12">
+          <Button
+            variant="secondary"
+            width="w-full"
+            height="h-54"
+            onClick={handleOpenLink}
+          >
+            원문 열기
+          </Button>
+          <Button
+            variant="primary"
+            width="w-full"
+            height="h-54"
+            className="text-gray-default bg-blue-light-active"
+            onClick={onMoveLinkModalOpen}
+          >
+            레퍼런스 폴더 이동
+          </Button>
+        </div>
       </div>
     </div>
   ) : null

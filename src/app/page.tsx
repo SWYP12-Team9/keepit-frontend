@@ -68,24 +68,14 @@ export default function LandingPage() {
                 탐색
               </Button>
             </Link>
-            <Link
-              href="#"
-              className="text-[18px] font-normal text-[#4D4D4D] hover:text-black"
-            >
-              공지사항
-            </Link>
-            <Link
-              href="#"
+            <a
+              href="https://forms.gle/mFN8LY5mjjFAfrM58"
+              target="_blank"
+              rel="noopener noreferrer"
               className="text-[18px] font-normal text-[#4D4D4D] hover:text-black"
             >
               문의하기
-            </Link>
-            <Link
-              href="#"
-              className="text-[18px] font-normal text-[#4D4D4D] hover:text-black"
-            >
-              약관
-            </Link>
+            </a>
           </div>
         </div>
 
