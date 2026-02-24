@@ -96,7 +96,6 @@ export default function Home() {
         linkList={linkList}
         isLoading={isSearchMode ? isSearchLinksLoading : isLinkListLoading}
         isSearchMode={isSearchMode}
-        requireLoginMessage={isLoggedIn ? undefined : '로그인이 필요합니다'}
       />
     </div>
   )

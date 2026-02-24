@@ -1,10 +1,11 @@
 'use client'
 
-import { OtherLinkCard } from '@/src/components/LinkCard'
-import { OtherUserLinkItem } from '@/src/types/recommendations/recommendations'
-import { SaveOtherUserLinkModal } from '../SaveOtherUserLinkModal/SaveOtherUserLinkModal'
-import { useEffect, useRef, useState } from 'react'
 import { EmptyLinks } from '@/src/components/EmptyLinks/EmptyLinks'
+import { OtherLinkCard } from '@/src/components/LinkCard'
+import { useIntersectionObserver } from '@/src/hooks/useIntersectionObserver'
+import { OtherUserLinkItem } from '@/src/types/recommendations/recommendations'
+import { useState } from 'react'
+import { SaveOtherUserLinkModal } from '../SaveOtherUserLinkModal/SaveOtherUserLinkModal'
 
 interface OtherUserLinksContainerProps {
   otherUserLinkList: OtherUserLinkItem[]
@@ -24,31 +25,12 @@ export function OtherUserLinksContainer({
   const [selectedLink, setSelectedLink] = useState<OtherUserLinkItem | null>(
     null,
   )
-  const observerRef = useRef<HTMLDivElement>(null)
 
-  useEffect(() => {
-    if (!hasMore || isFetchingNextPage || isLoading) return
-
-    const observer = new IntersectionObserver(
-      (entries) => {
-        if (entries[0].isIntersecting) {
-          onLoadMore?.()
-        }
-      },
-      { threshold: 0.1 },
-    )
-
-    const currentObserverTarget = observerRef.current
-    if (currentObserverTarget) {
-      observer.observe(currentObserverTarget)
-    }
-
-    return () => {
-      if (currentObserverTarget) {
-        observer.unobserve(currentObserverTarget)
-      }
-    }
-  }, [hasMore, onLoadMore, isFetchingNextPage, isLoading])
+  const { bottomRef } = useIntersectionObserver({
+    onIntersect: onLoadMore || (() => {}),
+    hasNextPage: hasMore,
+    isFetching: isFetchingNextPage,
+  })
 
   return isLoading && !otherUserLinkList.length ? (
     <div className="text-center">Loading...</div>
@@ -66,7 +48,7 @@ export function OtherUserLinksContainer({
             </li>
           ))}
         </ul>
-        {hasMore && <div ref={observerRef} className="h-20 w-full" />}
+        <div ref={bottomRef} className="h-20 w-full" />
       </div>
 
       {selectedLink && (
