@@ -6,12 +6,12 @@ import { Button } from '../Button'
 import { Modal } from './Modal'
 import { TermsModal } from './TermsModal'
 
-interface SettingsModalProps {
+interface SettingModalProps {
   isOpen: boolean
   onClose: () => void
 }
 
-export function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
+export function SettingModal({ isOpen, onClose }: SettingModalProps) {
   const { data: userInfo } = useGetUserInfo()
   const { mutate: deleteUser } = useDeleteUserMutation()
   const [termsModalOpen, setTermsModalOpen] = useState(false)

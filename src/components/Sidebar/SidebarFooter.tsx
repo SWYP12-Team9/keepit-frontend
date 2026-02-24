@@ -7,12 +7,12 @@ import Image from 'next/image'
 import { useState } from 'react'
 import { NavLogout, NavSetting } from '../Icon'
 import { ConfirmModal } from '../Modal/ConfirmModal'
-import { SettingsModal } from '../Modal/SettingModal'
+import { SettingModal } from '../Modal/SettingModal'
 
 export function SidebarFooter({ isExpanded }: { isExpanded: boolean }) {
   const { isLoggedIn } = useAuthStore()
   const [isLogoutModalOpen, setIsLogoutModalOpen] = useState(false)
-  const [isSettingsModalOpen, setIsSettingsModalOpen] = useState(false)
+  const [isSettingModalOpen, setIsSettingModalOpen] = useState(false)
 
   const handleLogin = (provider: string) => {
     const targetUrl = `${process.env.NEXT_PUBLIC_BASE_URL}/oauth2/authorization/${provider}`
@@ -93,7 +93,7 @@ export function SidebarFooter({ isExpanded }: { isExpanded: boolean }) {
         )}
       >
         <button
-          onClick={() => setIsSettingsModalOpen(true)}
+          onClick={() => setIsSettingModalOpen(true)}
           className="flex h-40 w-40 cursor-pointer items-center justify-center"
           aria-label="settings"
         >
@@ -108,9 +108,9 @@ export function SidebarFooter({ isExpanded }: { isExpanded: boolean }) {
           <NavLogout className="h-full w-full" />
         </button>
       </div>
-      <SettingsModal
-        isOpen={isSettingsModalOpen}
-        onClose={() => setIsSettingsModalOpen(false)}
+      <SettingModal
+        isOpen={isSettingModalOpen}
+        onClose={() => setIsSettingModalOpen(false)}
       />
       <ConfirmModal
         isOpen={isLogoutModalOpen}
