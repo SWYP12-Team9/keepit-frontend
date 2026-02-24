@@ -1,10 +1,8 @@
 'use client'
 
-import React from 'react'
+import { cn } from '@/src/utils/cn'
 import Image from 'next/image'
 import Link from 'next/link'
-import { cn } from '@/src/utils/cn'
-import { Button } from '@/src/components/ui/button'
 
 export default function LandingPage() {
   const handleLogin = (provider: string) => {
@@ -63,10 +61,10 @@ export default function LandingPage() {
 
           {/* Nav Items - Hidden on mobile, visible on desktop could be better, but image shows them */}
           <div className="hidden items-center gap-24 md:flex">
-            <Link href="/explore?login=true">
-              <Button className="h-36 rounded-full bg-[#6B4BFB] px-20 text-[18px] font-medium text-white hover:bg-[#5a3de0]">
+            <Link href="/explore">
+              <button className="h-36 rounded-full bg-[#6B4BFB] px-20 text-[18px] font-medium text-white hover:bg-[#5a3de0]">
                 탐색
-              </Button>
+              </button>
             </Link>
             <a
               href="https://forms.gle/mFN8LY5mjjFAfrM58"
