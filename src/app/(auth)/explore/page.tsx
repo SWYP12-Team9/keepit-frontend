@@ -3,15 +3,15 @@
 import { useGetCategories } from '@/src/apis/query/recommendation/useGetCategories'
 import { useGetOtherUserLinkList } from '@/src/apis/query/recommendation/useGetOtherUserLinkList'
 import { useGetSearchOtherUserLinks } from '@/src/apis/query/recommendation/useGetSearchOtherUserLinks'
+import { LoginModal } from '@/src/components/Modal/LoginModal'
 import { Tab, Tabs } from '@/src/components/Tabs'
 import { ALL_TAB } from '@/src/constants/defaultTap'
 import { useDebounce } from '@/src/hooks/useDebounce'
-import { useRouter, usePathname, useSearchParams } from 'next/navigation'
+import { useAuthStore } from '@/src/store/authStore'
+import { usePathname, useRouter, useSearchParams } from 'next/navigation'
 import { useState } from 'react'
 import { SearchLinksInput } from '../_components/SearchLinksInput/SearchLinksInput'
 import { OtherUserLinksContainer } from './_components/OtherUserLinksContainer/OtherUserLinksContainer'
-import { LoginModal } from '@/src/components/LoginModal'
-import { useAuthStore } from '@/src/store/authStore'
 
 export default function ExplorePage() {
   const searchParams = useSearchParams()
