@@ -25,10 +25,11 @@ export function GlobalDrawerContainer() {
 
   return (
     <>
-      {!isLinkDetailsLoading && isDrawerOpen && (
+      {isDrawerOpen && (
         <Drawer
-          key={linkDetails?.id ?? 0}
-          linkId={linkDetails?.id ?? 0}
+          key={`${linkId}-${isLinkDetailsLoading ? 'loading' : 'ready'}`}
+          linkId={linkId}
+          isLoading={isLinkDetailsLoading}
           onMoveLinkModalOpen={handleOpenMoveLinkModal}
           categoryColor={linkDetails?.reference?.colorCode ?? ''}
           categoryName={linkDetails?.reference?.title ?? ''}

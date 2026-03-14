@@ -43,5 +43,6 @@ export const useDrawerStore = create<DrawerStore>((set) => ({
   initializeValues: ({ why, memo }) =>
     set({ why, memo, initialWhy: why, initialMemo: memo }),
 
-  resetValues: () => set({ why: '', memo: '' }),
+  resetValues: () =>
+    set({ why: '', memo: '', initialWhy: '', initialMemo: '' }),
 }))
