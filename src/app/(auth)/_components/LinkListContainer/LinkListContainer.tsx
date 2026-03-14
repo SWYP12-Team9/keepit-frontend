@@ -111,7 +111,7 @@ export function LinkListContainer({
           <div
             key={item.id}
             onClick={() => handleOpenLinkDetail(item.id)}
-            className="w-full sm:w-auto"
+            className="w-full min-w-0 sm:w-auto sm:flex-none"
           >
             <MyLinkCard data={item} onDelete={handleDelete} />
           </div>

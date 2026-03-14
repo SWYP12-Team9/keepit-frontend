@@ -8,6 +8,7 @@ import { CreateFolderModal } from '@/src/components/Modal/CreateFolderModal'
 import { Tab, Tabs } from '@/src/components/Tabs'
 import { REFERENCE_TABS } from '@/src/constants/defaultTap'
 import { useIntersectionObserver } from '@/src/hooks/useIntersectionObserver'
+import { useChatbotStore } from '@/src/store/chatbotStore'
 import { ReferenceVisibility } from '@/src/types/reference/reference'
 import { useState } from 'react'
 import { FieldValues } from 'react-hook-form'
@@ -16,6 +17,7 @@ import ReferencFolderList from './ReferenceFolderList/ReferenceFolderList'
 export default function Reference() {
   const [selectedTab, setSelectedTab] = useState<Tab>(REFERENCE_TABS[0])
   const [isCreateFolderModalOpen, setCreateFolderModalOpen] = useState(false)
+  const isChatbotOpen = useChatbotStore((state) => state.isOpen)
 
   const { mutate: createFolder } = useCreateReferenceFolderMutation()
 
@@ -50,7 +52,9 @@ export default function Reference() {
   }
 
   return (
-    <div className="scrollbar-hide h-full overflow-y-auto px-16 md:px-84">
+    <div
+      className={`scrollbar-hide h-full overflow-y-auto px-16 md:px-84 ${isChatbotOpen ? 'lg:px-48 xl:px-64' : ''}`}
+    >
       <div className="sticky top-0 z-10 mt-25 bg-white">
         <div className="flex flex-col gap-12 pb-16 sm:flex-row sm:items-end sm:justify-between">
           <Tabs

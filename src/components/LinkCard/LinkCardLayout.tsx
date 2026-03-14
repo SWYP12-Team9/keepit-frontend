@@ -22,7 +22,7 @@ export function LinkCardLayout({
   }
 
   return (
-    <div className="bg-gray-box mb-12 flex h-[286px] w-full max-w-[331px] flex-col rounded-[10px] px-8 pt-8 pb-[10px] opacity-100 sm:w-[331px]">
+    <div className="bg-gray-box mb-12 flex h-[286px] w-full max-w-[331px] min-w-0 flex-col rounded-[10px] px-8 pt-8 pb-[10px] opacity-100 sm:w-[331px]">
       {header}
 
       <div className="mb-16 max-w-full px-12 sm:max-w-[273px]">
