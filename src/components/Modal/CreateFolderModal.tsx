@@ -1,7 +1,7 @@
 import { COLOR_OPTIONS } from '@/src/constants/colorOptions'
 import { createFolderSchema } from '@/src/schemas/saveLinkFormSchema'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { useEffect } from 'react'
+import { useEffect, useRef } from 'react'
 import { Controller, FieldValues, useForm } from 'react-hook-form'
 import { Button } from '../Button'
 import { ColorPicker } from '../ColorPicker'
@@ -9,6 +9,13 @@ import { Input } from '../Input'
 import { TextArea } from '../TextArea'
 import { FolderVisibleTab } from './FolderVisibleTab'
 import { Modal } from './Modal'
+
+const DEFAULT_FOLDER_VALUES = {
+  isPublic: true,
+  title: '',
+  colorCode: '',
+  description: '',
+}
 
 interface CreateFolderModalProps {
   isModalOpen: boolean
@@ -23,6 +30,8 @@ export function CreateFolderModal({
   onSubmit,
   initialData,
 }: CreateFolderModalProps) {
+  const prevModalOpen = useRef(false)
+
   const {
     reset,
     control,
@@ -31,18 +40,19 @@ export function CreateFolderModal({
     formState: { errors },
   } = useForm({
     resolver: zodResolver(createFolderSchema),
-    defaultValues: {
-      isPublic: true,
-      title: '',
-      colorCode: '',
-      description: '',
-    },
+    defaultValues: DEFAULT_FOLDER_VALUES,
   })
 
   useEffect(() => {
-    if (initialData && isModalOpen) {
-      reset(initialData)
+    if (isModalOpen && !prevModalOpen.current) {
+      reset(
+        initialData
+          ? { ...DEFAULT_FOLDER_VALUES, ...initialData }
+          : DEFAULT_FOLDER_VALUES,
+      )
     }
+
+    prevModalOpen.current = isModalOpen
   }, [initialData, isModalOpen, reset])
 
   return (
@@ -112,7 +122,7 @@ export function CreateFolderModal({
             variant="secondary"
             onClick={() => {
               setModalOpen(false)
-              reset()
+              reset(DEFAULT_FOLDER_VALUES)
             }}
           >
             취소

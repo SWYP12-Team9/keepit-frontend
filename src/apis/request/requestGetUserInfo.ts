@@ -16,3 +16,14 @@ export const requestGetUserInfo =
     const res = await axiosInstance.get('/users/info')
     return res.data
   }
+
+export const requestGetUserInfoWithToken = async (
+  accessToken: string,
+): Promise<RequestGetUserInfoResponse> => {
+  const res = await axiosInstance.get('/users/info', {
+    headers: {
+      Authorization: `Bearer ${accessToken}`,
+    },
+  })
+  return res.data
+}

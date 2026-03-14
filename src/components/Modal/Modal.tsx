@@ -9,18 +9,24 @@ interface ModalProps {
   width?: string
   height?: string
   className?: string
+  onClose?: () => void
 }
 
 export function Modal({
   isOpen,
   children,
   width,
+  onClose,
   height,
   className,
 }: ModalProps) {
   return isOpen ? (
-    <div className="fixed inset-0 z-50 flex items-center justify-center">
+    <div
+      className="fixed inset-0 z-50 flex items-center justify-center"
+      onClick={onClose}
+    >
       <div
+        onClick={(e) => e.stopPropagation()}
         className={cn(
           'rounded-20 relative z-10 bg-white p-30',
           'shadow-[0_0_10px_0_rgba(234,234,234,1)]',

@@ -6,11 +6,13 @@ import { referenceKeys } from './referenceKeys'
 interface UseGetReferenceListParams {
   type: ReferenceVisibility
   size?: number
+  enabled?: boolean
 }
 
 export const useGetReferenceList = ({
   type,
   size = 20,
+  enabled = true,
 }: UseGetReferenceListParams) => {
   return useInfiniteQuery({
     queryKey: referenceKeys.listInfinite({ type, size }),
@@ -23,6 +25,7 @@ export const useGetReferenceList = ({
       }),
 
     initialPageParam: null as string | null,
+    enabled,
 
     getNextPageParam: (lastPage) => {
       const { hasNext, nextCursor } = lastPage.data

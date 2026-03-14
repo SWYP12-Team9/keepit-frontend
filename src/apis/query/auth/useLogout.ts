@@ -21,7 +21,7 @@ export const useLogout = () => {
       logout()
       localStorage.removeItem('refreshToken')
       localStorage.removeItem('accessToken')
-      router.replace('/home')
+      router.replace('/')
     },
 
     onError: (error) => {

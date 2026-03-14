@@ -120,7 +120,7 @@ export function ProfileModal({
         className="flex w-full flex-col"
       >
         <div className="rounded-12 bg-blue-light p-24 pb-20">
-          <div className="rounded-12 relative h-140 w-full overflow-hidden bg-[#C5C8E1]">
+          <div className="rounded-12 relative h-140 w-full overflow-hidden bg-[#cceff5]">
             <Image
               src={backgroundImagePreview}
               alt="Background"
