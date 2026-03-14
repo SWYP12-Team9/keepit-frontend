@@ -106,7 +106,16 @@ export default function ReferenceDetails({
         },
       })
     }
-  }, [autoSaveValue.description, autoSaveValue.isPublic])
+  }, [
+    autoSaveValue.description,
+    autoSaveValue.isPublic,
+    currentFolderId,
+    folderDetail,
+    isAllTab,
+    patchReference,
+    serverDescription,
+    serverIsPublic,
+  ])
 
   const linkList = isSearchMode
     ? (searchLinksData?.data?.contents ?? [])

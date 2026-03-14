@@ -28,7 +28,7 @@ export function Sidebar({ forceExpanded = false, onNavigate }: SidebarProps) {
   return (
     <aside
       className={cn(
-        'bg-blue-light flex h-screen flex-col pb-[30px]',
+        'bg-blue-light flex h-full min-h-0 flex-col pb-[30px]',
         isExpanded ? 'w-[240px] px-10' : 'w-[62px] items-center px-0',
       )}
     >
@@ -40,7 +40,7 @@ export function Sidebar({ forceExpanded = false, onNavigate }: SidebarProps) {
             key={index}
             {...item}
             isExpanded={isExpanded}
-            onClick={onNavigate}
+            onNavigate={onNavigate}
           />
         ))}
       </nav>
@@ -48,7 +48,10 @@ export function Sidebar({ forceExpanded = false, onNavigate }: SidebarProps) {
       <div className="flex shrink-0 flex-col">
         {isExpanded && <div className="bg-gray-white mx-[10px] h-[1px]" />}
         <div className="max-h-[250px] overflow-hidden">
-          <SidebarReferenceListList isExpanded={isExpanded} />
+          <SidebarReferenceListList
+            isExpanded={isExpanded}
+            onNavigate={onNavigate}
+          />
         </div>
         <div className="mt-[20px]">
           <SidebarFooter isExpanded={isExpanded} />

@@ -1,25 +1,38 @@
 'use client'
 
-import { OtherLinkCard } from '@/src/components/LinkCard'
-import { OtherUserLinkItem } from '@/src/types/recommendations/recommendations'
-import { SaveOtherUserLinkModal } from '../SaveOtherUserLinkModal/SaveOtherUserLinkModal'
-import { useState } from 'react'
 import { EmptyLinks } from '@/src/components/EmptyLinks/EmptyLinks'
+import { OtherLinkCard } from '@/src/components/LinkCard'
+import { useIntersectionObserver } from '@/src/hooks/useIntersectionObserver'
+import { OtherUserLinkItem } from '@/src/types/recommendations/recommendations'
+import { useState } from 'react'
+import { SaveOtherUserLinkModal } from '../SaveOtherUserLinkModal/SaveOtherUserLinkModal'
 
 interface OtherUserLinksContainerProps {
   otherUserLinkList: OtherUserLinkItem[]
   isLoading: boolean
+  onLoadMore?: () => void
+  hasMore?: boolean
+  isFetchingNextPage?: boolean
 }
 
 export function OtherUserLinksContainer({
   otherUserLinkList,
   isLoading,
+  onLoadMore,
+  hasMore,
+  isFetchingNextPage,
 }: OtherUserLinksContainerProps) {
   const [selectedLink, setSelectedLink] = useState<OtherUserLinkItem | null>(
     null,
   )
 
-  return isLoading ? (
+  const { bottomRef } = useIntersectionObserver({
+    onIntersect: onLoadMore || (() => {}),
+    hasNextPage: hasMore,
+    isFetching: isFetchingNextPage,
+  })
+
+  return isLoading && !otherUserLinkList.length ? (
     <div className="text-center">Loading...</div>
   ) : otherUserLinkList.length ? (
     <div className="relative h-full min-h-0">
@@ -35,15 +48,14 @@ export function OtherUserLinksContainer({
             </li>
           ))}
         </ul>
+        <div ref={bottomRef} className="h-20 w-full" />
       </div>
 
       {selectedLink && (
-        <div className="absolute top-0 left-0 z-40">
-          <SaveOtherUserLinkModal
-            data={selectedLink}
-            onClose={() => setSelectedLink(null)}
-          />
-        </div>
+        <SaveOtherUserLinkModal
+          data={selectedLink}
+          onClose={() => setSelectedLink(null)}
+        />
       )}
     </div>
   ) : (
