@@ -7,9 +7,11 @@ export interface RequestGetSearchOtherUserLinksParams {
   size?: number
 }
 
-export type RequestGetSearchOtherUserLinksResponse = BaseResponse<
-  OtherUserLinkItem[]
->
+export type RequestGetSearchOtherUserLinksResponse = BaseResponse<{
+  contents: OtherUserLinkItem[]
+  nextCursor: string | null
+  hasNext: boolean
+}>
 
 export const requestGetSearchOtherUserLinks = async (
   params: RequestGetSearchOtherUserLinksParams,
