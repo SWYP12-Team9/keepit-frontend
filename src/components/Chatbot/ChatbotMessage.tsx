@@ -1,6 +1,7 @@
 import { ArrowDown, Sparkle } from '../Icon'
-import { useDrawerStore } from '@/src/store/drawerStore'
+import { useOpenLinkDrawer } from '@/src/hooks/useOpenLinkDrawer'
 import { useChatbotStore } from '@/src/store/chatbotStore'
+import MarkdownContent from './MarkdownContent'
 
 export type MessageType = 'user' | 'ai'
 
@@ -24,16 +25,18 @@ interface ChatbotMessageProps {
 
 export default function ChatbotMessage({ message }: ChatbotMessageProps) {
   const { type, content, links, isLoading } = message
-  const setLinkId = useDrawerStore((state) => state.setLinkId)
-  const openDrawer = useDrawerStore((state) => state.open)
   const closeChatbot = useChatbotStore((state) => state.close)
+  const { openLinkDrawer } = useOpenLinkDrawer()
 
-  const handleLinkClick = (idStr: string) => {
+  const handleLinkClick = async (idStr: string) => {
     const numericId = Number(idStr)
     if (!isNaN(numericId)) {
-      setLinkId(numericId)
-      openDrawer()
-      closeChatbot()
+      try {
+        await openLinkDrawer(numericId)
+        closeChatbot()
+      } catch (error) {
+        console.error('링크 상세를 여는 중 오류 발생:', error)
+      }
     }
   }
 
@@ -68,9 +71,10 @@ export default function ChatbotMessage({ message }: ChatbotMessageProps) {
     <div className="flex w-full flex-col items-start gap-[10px]">
       {content && (
         <div className="bg-gray-field flex items-center justify-center gap-[10px] rounded-[8px] px-[20px] py-[10px]">
-          <p className="text-body-4 text-gray-default whitespace-pre-wrap">
-            {content}
-          </p>
+          <MarkdownContent
+            content={content}
+            className="text-body-4 text-gray-default w-full"
+          />
         </div>
       )}
 
