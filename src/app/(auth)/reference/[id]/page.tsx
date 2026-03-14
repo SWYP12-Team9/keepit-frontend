@@ -11,6 +11,7 @@ import { Tab, Tabs } from '@/src/components/Tabs'
 import { TextArea } from '@/src/components/TextArea'
 import { ALL_TAB } from '@/src/constants/defaultTap'
 import { useDebounce } from '@/src/hooks/useDebounce'
+import { useChatbotStore } from '@/src/store/chatbotStore'
 import Image from 'next/image'
 import { useRouter } from 'next/navigation'
 import { use, useEffect, useRef, useState } from 'react'
@@ -24,6 +25,7 @@ export default function ReferenceDetails({
   params: Promise<{ id: string }>
 }) {
   const router = useRouter()
+  const isChatbotOpen = useChatbotStore((state) => state.isOpen)
   const [searchKeyword, setSearchKeyword] = useState('')
   const [isEditOpen, setIsEditOpen] = useState(false)
   const { mutate: patchReference } = usePatchReferenceMutation()
@@ -148,7 +150,9 @@ export default function ReferenceDetails({
   }
 
   return (
-    <div className="scrollbar-hide h-full overflow-y-auto px-84">
+    <div
+      className={`scrollbar-hide h-full overflow-y-auto px-16 md:px-84 ${isChatbotOpen ? 'lg:px-48 xl:px-64' : ''}`}
+    >
       <div className="sticky top-0 z-10 mt-25 bg-white">
         {isAllTab && (
           <div className="flex flex-col">
@@ -175,7 +179,7 @@ export default function ReferenceDetails({
         {!isAllTab && (
           <>
             <div className="flex flex-col gap-24 pt-35 pb-32">
-              <div className="flex items-center justify-between">
+              <div className="flex flex-col gap-12 sm:flex-row sm:items-center sm:justify-between">
                 <div className="flex items-center gap-12">
                   <h1 className="text-heading-3 text-gray-default">
                     {folderDetail?.title}
@@ -225,7 +229,7 @@ export default function ReferenceDetails({
         )}
       </div>
 
-      <div className="mt-44">
+      <div className="mt-28 md:mt-44">
         <LinkListContainer
           linkList={linkList}
           isLoading={isLoading}

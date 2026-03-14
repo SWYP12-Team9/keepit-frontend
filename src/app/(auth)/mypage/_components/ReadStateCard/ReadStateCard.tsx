@@ -20,13 +20,12 @@ export function ReadStateCard({ data }: ReadStateCardProps) {
       badge="purple-view"
       description={data.text}
     >
-      <div className="flex items-center justify-between py-32">
+      <div className="flex w-full items-center justify-center gap-12 py-12">
         <div
-          className="relative"
+          className="relative shrink-0"
           style={{
-            width: '148px',
-            height: '148px',
-            marginRight: '16px',
+            width: '120px',
+            height: '120px',
             opacity: 1,
           }}
         >
@@ -42,8 +41,8 @@ export function ReadStateCard({ data }: ReadStateCardProps) {
                 data={backgroundData}
                 cx="50%"
                 cy="50%"
-                innerRadius={50}
-                outerRadius={74}
+                innerRadius={40}
+                outerRadius={60}
                 dataKey="value"
                 stroke="none"
                 isAnimationActive={false}
@@ -53,8 +52,8 @@ export function ReadStateCard({ data }: ReadStateCardProps) {
                 data={readData}
                 cx="50%"
                 cy="50%"
-                innerRadius={50}
-                outerRadius={74}
+                innerRadius={40}
+                outerRadius={60}
                 dataKey="value"
                 startAngle={90}
                 endAngle={90 - (360 * data.readLinkPercent) / 100}

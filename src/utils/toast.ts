@@ -5,7 +5,7 @@ import { ErrorToast } from '../components/Toast/ErrorToast'
 const sharedToastStyle: ToastOptions = {
   closeButton: false,
   position: 'top-center',
-  autoClose: 500,
+  autoClose: 2000,
   pauseOnHover: false,
   hideProgressBar: true,
   className:

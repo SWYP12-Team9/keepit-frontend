@@ -14,6 +14,7 @@ interface DrawerProps {
   onMoveLinkModalOpen: () => void
   categoryColor: string
   categoryName: string
+  isLoading?: boolean
   viewCount: number
   title: string
   defaultWhy: string
@@ -27,6 +28,7 @@ export function Drawer({
   onMoveLinkModalOpen,
   categoryColor,
   categoryName,
+  isLoading = false,
   viewCount,
   title,
   defaultWhy,
@@ -41,6 +43,7 @@ export function Drawer({
 
   const closeDrawer = useDrawerStore((state) => state.close)
   const resetValues = useDrawerStore((state) => state.resetValues)
+  const initializeValues = useDrawerStore((state) => state.initializeValues)
 
   const setWhy = useDrawerStore((state) => state.setWhy)
   const setMemo = useDrawerStore((state) => state.setMemo)
@@ -51,6 +54,11 @@ export function Drawer({
 
   const debouncedWhy = useDebounce({ value: localWhy, delay: 800 })
   const debouncedMemo = useDebounce({ value: localMemo, delay: 800 })
+
+  useEffect(() => {
+    initializeValues({ why: defaultWhy, memo: defaultMemo })
+    isInitialMount.current = true
+  }, [linkId, defaultWhy, defaultMemo, initializeValues])
 
   useEffect(() => {
     if (!isOpen || !linkId) return
@@ -69,7 +77,15 @@ export function Drawer({
         },
       })
     }
-  }, [debouncedWhy, debouncedMemo, linkId])
+  }, [
+    debouncedMemo,
+    debouncedWhy,
+    defaultMemo,
+    defaultWhy,
+    isOpen,
+    linkId,
+    patchLink,
+  ])
 
   const handleClose = () => {
     resetValues()
@@ -84,7 +100,7 @@ export function Drawer({
 
   return isOpen ? (
     <div
-      className={`fixed top-0 right-0 z-50 flex h-screen w-[405px] flex-col overflow-hidden bg-white p-30 shadow-xl ${
+      className={`fixed top-0 right-0 z-50 flex h-screen w-full flex-col overflow-hidden bg-white p-16 shadow-xl md:w-[405px] md:p-30 ${
         isClosing ? 'animate-drawer-out' : 'animate-drawer-in'
       }`}
     >
@@ -107,61 +123,71 @@ export function Drawer({
       </div>
 
       <div className="mb-[10px] flex shrink-0 items-center gap-8">
-        <div
-          className="rounded-4 h-[10px] w-[10px]"
-          style={{ backgroundColor: categoryColor }}
-        />
+        {categoryColor && (
+          <div
+            className="rounded-4 h-[10px] w-[10px]"
+            style={{ backgroundColor: categoryColor }}
+          />
+        )}
         <span className="text-caption-1">{categoryName}</span>
       </div>
 
       <div className="scrollbar-hide flex flex-1 flex-col gap-20 overflow-y-auto pr-4">
-        <Field label="제목" className="shrink-0">
-          <div className="rounded-8 bg-white p-16">
-            <p className="text-caption-1 text-gray-default leading-relaxed">
-              {title}
-            </p>
+        {isLoading ? (
+          <div className="text-body-3 text-gray-disabled flex flex-1 items-center justify-center">
+            링크 상세를 불러오는 중...
           </div>
-        </Field>
+        ) : (
+          <>
+            <Field label="제목" className="shrink-0">
+              <div className="rounded-8 bg-white p-16">
+                <p className="text-caption-1 text-gray-default leading-relaxed">
+                  {title}
+                </p>
+              </div>
+            </Field>
 
-        <Field label="이유" className="shrink-0">
-          <Input
-            defaultValue={defaultWhy}
-            className="pr-80"
-            onChange={(e) => {
-              const value = e.target.value
-              setLocalWhy(value)
-              setWhy(value)
-            }}
-          />
-        </Field>
+            <Field label="이유" className="shrink-0">
+              <Input
+                value={localWhy}
+                className="pr-80"
+                onChange={(e) => {
+                  const value = e.target.value
+                  setLocalWhy(value)
+                  setWhy(value)
+                }}
+              />
+            </Field>
 
-        <Field label="링크" className="shrink-0">
-          <div className="rounded-8 flex min-h-[54px] items-start bg-white p-16">
-            <p className="text-caption-1 text-gray-default leading-relaxed break-all">
-              {link}
-            </p>
-          </div>
-        </Field>
+            <Field label="링크" className="shrink-0">
+              <div className="rounded-8 flex min-h-[54px] items-start bg-white p-16">
+                <p className="text-caption-1 text-gray-default leading-relaxed break-all">
+                  {link}
+                </p>
+              </div>
+            </Field>
 
-        <Field label="Ai 핵심요약" className="shrink-0">
-          <div className="rounded-8 bg-white p-16">
-            <p className="text-caption-1 text-gray-default leading-relaxed">
-              {aiSummary}
-            </p>
-          </div>
-        </Field>
+            <Field label="Ai 핵심요약" className="shrink-0">
+              <div className="rounded-8 bg-white p-16">
+                <p className="text-caption-1 text-gray-default leading-relaxed">
+                  {aiSummary}
+                </p>
+              </div>
+            </Field>
 
-        <Field label="메모" className="shrink-0">
-          <TextArea
-            className="bg-gray-field h-200 resize-none border-none"
-            defaultValue={defaultMemo}
-            onChange={(e) => {
-              const value = e.target.value
-              setLocalMemo(value)
-              setMemo(value)
-            }}
-          />
-        </Field>
+            <Field label="메모" className="shrink-0">
+              <TextArea
+                className="bg-gray-field h-200 resize-none border-none"
+                value={localMemo}
+                onChange={(e) => {
+                  const value = e.target.value
+                  setLocalMemo(value)
+                  setMemo(value)
+                }}
+              />
+            </Field>
+          </>
+        )}
       </div>
 
       <div className="mt-20 flex shrink-0 gap-12">
@@ -170,6 +196,7 @@ export function Drawer({
           width="w-full"
           height="h-54"
           onClick={handleOpenLink}
+          disabled={isLoading}
         >
           원문 열기
         </Button>
@@ -179,6 +206,7 @@ export function Drawer({
           height="h-54"
           className="text-gray-default bg-blue-light-active"
           onClick={onMoveLinkModalOpen}
+          disabled={isLoading}
         >
           레퍼런스 폴더 이동
         </Button>

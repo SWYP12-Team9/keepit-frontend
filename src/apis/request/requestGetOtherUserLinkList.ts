@@ -7,9 +7,11 @@ export interface RequestGetOtherUserLinkListParams {
   size?: number
 }
 
-export type RequestGetOtherUserLinkListResponse = BaseResponse<
-  OtherUserLinkItem[]
->
+export type RequestGetOtherUserLinkListResponse = BaseResponse<{
+  contents: OtherUserLinkItem[]
+  nextCursor: string | null
+  hasNext: boolean
+}>
 
 export const requestGetOtherUserLinkList = async ({
   category,
