@@ -10,6 +10,7 @@ interface SidebarNavProps {
   label: string
   href: string
   isExpanded: boolean
+  onClick?: () => void
 }
 
 export default function SidebarNav({
@@ -17,6 +18,7 @@ export default function SidebarNav({
   label,
   href,
   isExpanded,
+  onClick,
 }: SidebarNavProps) {
   const pathname = usePathname()
   const isActive = pathname === href
@@ -24,6 +26,7 @@ export default function SidebarNav({
   return (
     <Link
       href={href}
+      onClick={onClick}
       className={cn(
         'group flex items-center transition-all',
         isExpanded

@@ -16,9 +16,14 @@ const navItems = [
   { icon: NavMypage, label: '마이페이지', href: '/mypage' },
 ]
 
-export function Sidebar() {
+interface SidebarProps {
+  forceExpanded?: boolean
+  onNavigate?: () => void
+}
+
+export function Sidebar({ forceExpanded = false, onNavigate }: SidebarProps) {
   const isDrawerOpen = useDrawerStore((state) => state.isOpen)
-  const isExpanded = !isDrawerOpen
+  const isExpanded = forceExpanded || !isDrawerOpen
 
   return (
     <aside
@@ -31,7 +36,12 @@ export function Sidebar() {
       <SidebarProfile isExpanded={isExpanded} />
       <nav className="shrink-0 space-y-2">
         {navItems.map((item, index) => (
-          <SidebarNav key={index} {...item} isExpanded={isExpanded} />
+          <SidebarNav
+            key={index}
+            {...item}
+            isExpanded={isExpanded}
+            onClick={onNavigate}
+          />
         ))}
       </nav>
       <div className="flex-1" />

@@ -14,6 +14,7 @@ interface DrawerProps {
   onMoveLinkModalOpen: () => void
   categoryColor: string
   categoryName: string
+  isDefault?: boolean
   viewCount: number
   title: string
   defaultWhy: string
@@ -27,6 +28,7 @@ export function Drawer({
   onMoveLinkModalOpen,
   categoryColor,
   categoryName,
+  isDefault,
   viewCount,
   title,
   defaultWhy,
@@ -84,7 +86,7 @@ export function Drawer({
 
   return isOpen ? (
     <div
-      className={`fixed top-0 right-0 z-50 flex h-screen w-[405px] flex-col overflow-hidden bg-white p-30 shadow-xl ${
+      className={`fixed top-0 right-0 z-50 flex h-screen w-full flex-col overflow-hidden bg-white p-16 shadow-xl md:w-[405px] md:p-30 ${
         isClosing ? 'animate-drawer-out' : 'animate-drawer-in'
       }`}
     >

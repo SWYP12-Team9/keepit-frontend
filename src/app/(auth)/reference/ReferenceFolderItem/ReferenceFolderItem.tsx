@@ -81,7 +81,7 @@ export default function ReferenceFolderItem({
     <>
       <div
         onClick={handleFolderClick}
-        className="group rounded-10 relative flex h-[107px] min-w-[148px] cursor-pointer flex-col border border-[#EBEBEB] bg-white px-15 pt-16 pb-14 shadow-[0px_0px_5px_0px_#EAEAEA]"
+        className="group rounded-10 relative flex h-[107px] w-full min-w-0 cursor-pointer flex-col border border-[#EBEBEB] bg-white px-15 pt-16 pb-14 shadow-[0px_0px_5px_0px_#EAEAEA]"
       >
         <div className="flex items-start justify-between">
           <div className="relative h-28 w-36">

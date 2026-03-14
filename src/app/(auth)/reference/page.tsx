@@ -50,9 +50,9 @@ export default function Reference() {
   }
 
   return (
-    <div className="scrollbar-hide h-full overflow-y-auto px-84">
+    <div className="scrollbar-hide h-full overflow-y-auto px-16 md:px-84">
       <div className="sticky top-0 z-10 mt-25 bg-white">
-        <div className="flex items-end justify-between pb-16">
+        <div className="flex flex-col gap-12 pb-16 sm:flex-row sm:items-end sm:justify-between">
           <Tabs
             defaultTap={REFERENCE_TABS[0]}
             tabs={REFERENCE_TABS.slice(1)}
@@ -63,7 +63,7 @@ export default function Reference() {
 
           <Button
             onClick={() => setCreateFolderModalOpen(true)}
-            width="w-172"
+            width="w-full sm:w-172"
             height="h-42"
           >
             레퍼런스 뷰 생성

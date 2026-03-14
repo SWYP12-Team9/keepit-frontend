@@ -108,7 +108,11 @@ export function LinkListContainer({
       )}
       <div className="flex flex-wrap gap-10">
         {linkList.map((item: LinkItem | SearchLinkItem) => (
-          <div key={item.id} onClick={() => handleOpenLinkDetail(item.id)}>
+          <div
+            key={item.id}
+            onClick={() => handleOpenLinkDetail(item.id)}
+            className="w-full sm:w-auto"
+          >
             <MyLinkCard data={item} onDelete={handleDelete} />
           </div>
         ))}

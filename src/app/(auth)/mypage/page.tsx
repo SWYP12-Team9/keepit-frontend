@@ -18,9 +18,9 @@ export default function MyPage() {
 
   if (isLoading) {
     return (
-      <div className="h-full bg-gray-50 p-24">
+      <div className="h-full bg-gray-50 p-16 md:p-24">
         <div className="mx-auto max-w-6xl">
-          <div className="grid grid-cols-3 gap-24">
+          <div className="grid grid-cols-1 gap-24 md:grid-cols-3">
             {[1, 2, 3].map((i) => (
               <div
                 key={i}
@@ -63,70 +63,73 @@ export default function MyPage() {
   const { topReferences, readState, savePattern } = userStats.data
 
   return (
-    <div className="flex h-full flex-col overflow-hidden">
-      <div className="relative min-h-[180px] flex-grow px-29 pt-29">
-        <div className="rounded-20 relative h-full w-full overflow-hidden">
-          <Image
-            src={
-              userInfo?.data.backgroundImageUrl ||
-              '/images/defaultBackground.png'
-            }
-            alt="배경이미지"
-            fill
-            className="object-cover"
-          />
+    <div className="h-full min-h-0 flex-1 overflow-x-hidden overflow-y-auto">
+      <div className="mx-auto flex min-h-full w-full max-w-[1280px] flex-col">
+        <div className="relative h-[180px] w-full shrink-0 px-16 pt-16 md:h-[200px] md:px-29 md:pt-29">
+          <div className="rounded-20 relative h-full w-full overflow-hidden">
+            <Image
+              src={
+                userInfo?.data.backgroundImageUrl ||
+                '/images/defaultBackground.png'
+              }
+              alt="배경이미지"
+              fill
+              className="object-cover"
+            />
+          </div>
         </div>
-      </div>
 
-      <div className="flex-shrink-0 px-24">
-        <div className="relative -mt-50 mb-32 ml-50">
-          <div className="relative mb-18 w-fit">
-            <div className="relative h-75 w-75 overflow-hidden rounded-full">
-              <Image
-                src={
-                  userInfo?.data.profileImageUrl || '/images/defaultProfile.png'
-                }
-                alt="프로필"
-                fill
-                className="object-cover"
-              />
+        <div className="px-16 md:px-24">
+          <div className="relative -mt-42 mb-32 ml-0 md:-mt-50 md:ml-50">
+            <div className="relative mb-18 w-fit">
+              <div className="relative h-75 w-75 overflow-hidden rounded-full border-4 border-white bg-white">
+                <Image
+                  src={
+                    userInfo?.data.profileImageUrl ||
+                    '/images/defaultProfile.png'
+                  }
+                  alt="프로필"
+                  fill
+                  className="object-cover"
+                />
+              </div>
+
+              <button className="absolute -right-8 bottom-0 flex h-32 w-32 items-center justify-center">
+                <Image
+                  src="/icons/circle-camera.svg"
+                  alt="편집"
+                  width={24}
+                  height={24}
+                />
+              </button>
             </div>
 
-            <button className="absolute -right-8 bottom-0 flex h-32 w-32 items-center justify-center">
-              <Image
-                src="/icons/circle-camera.svg"
-                alt="편집"
-                width={24}
-                height={24}
-              />
-            </button>
-          </div>
+            <div className="mb-10 flex min-w-0 items-center gap-12">
+              <h1 className="text-heading-3 text-gray-default truncate">
+                {userInfo?.data.nickname}
+              </h1>
+              <button
+                onClick={() => setIsProfileModalOpen(true)}
+                className="cursor-pointer"
+              >
+                <Image
+                  src="/icons/profile-edit.svg"
+                  alt="편집"
+                  width={19}
+                  height={19}
+                />
+              </button>
+            </div>
 
-          <div className="mb-10 flex items-center gap-12">
-            <h1 className="text-heading-3 text-gray-default">
-              {userInfo?.data.nickname}
-            </h1>
-            <button
-              onClick={() => setIsProfileModalOpen(true)}
-              className="cursor-pointer"
-            >
-              <Image
-                src="/icons/profile-edit.svg"
-                alt="편집"
-                width={19}
-                height={19}
-              />
-            </button>
-          </div>
+            <p className="text-body-2 text-gray-default mb-32 break-words">
+              {userInfo?.data.introduction || '반갑습니다'}
+            </p>
 
-          <p className="text-body-2 text-gray-default mb-32">
-            {userInfo?.data.introduction || '반갑습니다'}
-          </p>
-
-          <div className="grid grid-cols-3 gap-19 pb-40">
-            <TopReferencesCard data={topReferences} />
-            <ReadStateCard data={readState} />
-            <SavePatternCard data={savePattern} />
+            <div className="grid grid-cols-1 gap-19 pb-40 lg:grid-cols-2 xl:grid-cols-3">
+              <TopReferencesCard data={topReferences} />
+              <ReadStateCard data={readState} />
+              <SavePatternCard data={savePattern} />
+            </div>
           </div>
         </div>
       </div>
