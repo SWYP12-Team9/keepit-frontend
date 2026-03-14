@@ -67,7 +67,7 @@ export default function ExplorePage() {
   })
 
   const otherUserLinkList = isSearchMode
-    ? (searchOtherUserLinks?.data ?? [])
+    ? (searchOtherUserLinks?.data?.contents ?? [])
     : (otherUserLinkListData?.pages.flatMap((page) => page.data.contents) ?? [])
 
   const tabs = categories?.data

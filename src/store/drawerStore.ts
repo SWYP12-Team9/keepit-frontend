@@ -3,6 +3,8 @@ import { create } from 'zustand'
 interface DrawerStore {
   isOpen: boolean
   isClosing: boolean
+  linkId: number | null
+  setLinkId: (id: number | null) => void
   open: () => void
   close: () => void
 
@@ -20,11 +22,13 @@ interface DrawerStore {
 export const useDrawerStore = create<DrawerStore>((set) => ({
   isOpen: false,
   isClosing: false,
+  linkId: null,
+  setLinkId: (id) => set({ linkId: id }),
   open: () => set({ isOpen: true }),
   close: () => {
     set({ isClosing: true })
     setTimeout(() => {
-      set({ isOpen: false, isClosing: false })
+      set({ isOpen: false, isClosing: false, linkId: null })
     }, 300)
   },
 
@@ -39,5 +43,6 @@ export const useDrawerStore = create<DrawerStore>((set) => ({
   initializeValues: ({ why, memo }) =>
     set({ why, memo, initialWhy: why, initialMemo: memo }),
 
-  resetValues: () => set({ why: '', memo: '' }),
+  resetValues: () =>
+    set({ why: '', memo: '', initialWhy: '', initialMemo: '' }),
 }))

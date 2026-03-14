@@ -1,15 +1,8 @@
-import { linkKeys } from '@/src/apis/query/link/linkKeys'
 import { useDeleteLinkMutation } from '@/src/apis/query/link/useDeleteLinkMutation'
-import { useGetLinkDetails } from '@/src/apis/query/link/useGetLinkDetails'
-import { requestGetLinkDetails } from '@/src/apis/request/requestGetLinkDetails'
-import { Drawer } from '@/src/components/Drawer'
 import { EmptyLinks } from '@/src/components/EmptyLinks/EmptyLinks'
 import { MyLinkCard } from '@/src/components/LinkCard'
-import { MoveLinkModal } from '@/src/components/Modal/MoveLinkModal'
-import { useDrawerStore } from '@/src/store/drawerStore'
+import { useOpenLinkDrawer } from '@/src/hooks/useOpenLinkDrawer'
 import { LinkItem, SearchLinkItem } from '@/src/types/link/link'
-import { useQueryClient } from '@tanstack/react-query'
-import { useState } from 'react'
 
 interface LinkListContainerProps {
   linkList: LinkItem[] | SearchLinkItem[]
@@ -26,17 +19,8 @@ export function LinkListContainer({
   showTitle = true,
   isReferenceDetail = false,
 }: LinkListContainerProps) {
-  const queryClient = useQueryClient()
-  const [selectedLinkId, setSelectedLinkId] = useState<number | null>(null)
-  const [isMoveLinkModalOpen, setMoveLinkModalOpen] = useState(false)
-
-  const openDrawer = useDrawerStore((state) => state.open)
-
   const { mutateAsync: deleteLink } = useDeleteLinkMutation()
-  const { data: linkDetailsData, isLoading: isLinkDetailsLoading } =
-    useGetLinkDetails(selectedLinkId)
-
-  const linkDetails = linkDetailsData?.data
+  const { openLinkDrawer } = useOpenLinkDrawer()
 
   const handleDelete = async (id: number) => {
     await deleteLink(id)
@@ -75,25 +59,11 @@ export function LinkListContainer({
   const emptyProps = getEmptyStateProps()
 
   const handleOpenLinkDetail = async (id: number) => {
-    setSelectedLinkId(id)
     try {
-      await queryClient.fetchQuery({
-        queryKey: linkKeys.detail(id),
-        queryFn: () => requestGetLinkDetails(id),
-      })
-
-      await queryClient.invalidateQueries({
-        queryKey: linkKeys.lists(),
-      })
-
-      openDrawer()
+      await openLinkDrawer(id)
     } catch (error) {
-      console.error('데이터를 가져오는 중 오류 발생:', error)
+      console.error('링크 상세를 여는 중 오류 발생:', error)
     }
-  }
-
-  const handleOpenMoveLinkModal = () => {
-    setMoveLinkModalOpen(true)
   }
 
   return isLoading ? (
@@ -110,35 +80,12 @@ export function LinkListContainer({
           <div
             key={item.id}
             onClick={() => handleOpenLinkDetail(item.id)}
-            className="w-full sm:w-auto"
+            className="w-full min-w-0 sm:w-auto sm:flex-none"
           >
             <MyLinkCard data={item} onDelete={handleDelete} />
           </div>
         ))}
       </div>
-
-      {!isLinkDetailsLoading && (
-        <Drawer
-          key={linkDetails?.id ?? 0}
-          linkId={linkDetails?.id ?? 0}
-          onMoveLinkModalOpen={handleOpenMoveLinkModal}
-          categoryColor={linkDetails?.reference?.colorCode ?? ''}
-          categoryName={linkDetails?.reference?.title ?? ''}
-          viewCount={linkDetails?.viewCount ?? 0}
-          title={linkDetails?.title ?? ''}
-          defaultWhy={linkDetails?.why ?? ''}
-          link={linkDetails?.url ?? ''}
-          aiSummary={linkDetails?.aiSummary ?? ''}
-          defaultMemo={linkDetails?.memo ?? ''}
-        />
-      )}
-      {isMoveLinkModalOpen && (
-        <MoveLinkModal
-          isModalOpen={isMoveLinkModalOpen}
-          onClose={() => setMoveLinkModalOpen(false)}
-          linkId={selectedLinkId}
-        />
-      )}
     </div>
   ) : (
     <EmptyLinks

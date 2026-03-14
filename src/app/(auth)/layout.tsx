@@ -3,9 +3,14 @@
 import { SaveLinkModal } from '@/src/components/Modal'
 import { OpenSaveLinkButton } from '@/src/components/OpenSaveLinkButton/OpenSaveLinkButton'
 import { Sidebar } from '@/src/components/Sidebar'
+import ChatbotContainer from '@/src/components/Chatbot/ChatbotContainer'
 import Image from 'next/image'
 import { usePathname } from 'next/navigation'
 import { useState } from 'react'
+import ChatbotButton from '@/src/components/Chatbot/ChatbotButton'
+import { useChatbotStore } from '@/src/store/chatbotStore'
+import { useDrawerStore } from '@/src/store/drawerStore'
+import { GlobalDrawerContainer } from '@/src/components/Drawer/GlobalDrawerContainer'
 
 export default function AuthLayout({
   children,
@@ -15,6 +20,8 @@ export default function AuthLayout({
   const pathname = usePathname()
   const isMyPage = pathname === '/mypage'
   const [isMobileSidebarOpen, setIsMobileSidebarOpen] = useState(false)
+  const isChatbotOpen = useChatbotStore((state) => state.isOpen)
+  const isDrawerOpen = useDrawerStore((state) => state.isOpen)
 
   return (
     <div className="bg-blue-light flex h-dvh min-h-screen overflow-hidden">
@@ -41,11 +48,20 @@ export default function AuthLayout({
         </header>
 
         <main className="relative flex min-h-0 min-w-0 flex-1 pt-0 md:pt-24">
-          <div className="md:rounded-tl-20 flex min-h-0 min-w-0 flex-1 flex-col rounded-none bg-white">
+          <div
+            className={`relative flex min-h-0 min-w-0 flex-1 flex-col rounded-none bg-white transition-all duration-300 md:rounded-tl-[20px] ${isChatbotOpen && !isMyPage ? 'lg:mr-[397px] lg:rounded-tr-[20px]' : ''}`}
+          >
             {children}
+            {!isMyPage && !isDrawerOpen && (
+              <>
+                <OpenSaveLinkButton />
+                <ChatbotButton />
+              </>
+            )}
           </div>
-          {!isMyPage && <OpenSaveLinkButton />}
+          {!isMyPage && <ChatbotContainer />}
           <SaveLinkModal />
+          <GlobalDrawerContainer />
         </main>
       </div>
 

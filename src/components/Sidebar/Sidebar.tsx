@@ -21,9 +21,9 @@ interface SidebarProps {
   onNavigate?: () => void
 }
 
-export function Sidebar({ forceExpanded, onNavigate }: SidebarProps) {
+export function Sidebar({ forceExpanded = false, onNavigate }: SidebarProps) {
   const isDrawerOpen = useDrawerStore((state) => state.isOpen)
-  const isExpanded = forceExpanded ?? !isDrawerOpen
+  const isExpanded = forceExpanded || !isDrawerOpen
 
   return (
     <aside

@@ -38,11 +38,11 @@ export function OtherUserLinksContainer({
     <div className="relative h-full min-h-0">
       <div className="scrollbar-hide h-full overflow-y-auto pb-24">
         <ul className="flex flex-wrap gap-10">
-          {otherUserLinkList?.map((item: OtherUserLinkItem, index: number) => (
+          {otherUserLinkList?.map((item: OtherUserLinkItem) => (
             <li
-              key={`${item.id}-${index}`}
+              key={item.id}
               onClick={() => setSelectedLink(item)}
-              className="w-full sm:w-auto"
+              className="w-full min-w-0 sm:w-auto sm:flex-none"
             >
               <OtherLinkCard data={item} />
             </li>

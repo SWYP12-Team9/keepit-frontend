@@ -32,10 +32,12 @@ export function MyLinkCardHeader({
   return (
     <div className="relative flex h-[38px] items-center justify-between px-12 pt-2">
       <div className="flex items-center gap-8">
-        <div
-          className="h-[10px] w-[10px] rounded-[2px]"
-          style={{ backgroundColor: colorCode }}
-        />
+        {colorCode && (
+          <div
+            className="h-[10px] w-[10px] rounded-[2px]"
+            style={{ backgroundColor: colorCode }}
+          />
+        )}
         <span className="text-caption-1 text-gray-disabled">{title}</span>
       </div>
       <button
