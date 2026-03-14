@@ -74,6 +74,7 @@ export default function MyPage() {
               }
               alt="배경이미지"
               fill
+              sizes="100vw"
               className="object-cover"
             />
           </div>
@@ -90,6 +91,7 @@ export default function MyPage() {
                   }
                   alt="프로필"
                   fill
+                  sizes="75px"
                   className="object-cover"
                 />
               </div>

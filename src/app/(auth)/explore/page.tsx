@@ -37,8 +37,8 @@ export default function ExplorePage() {
   })
 
   const otherUserLinkList = isSearchMode
-    ? (searchOtherUserLinks?.data ?? [])
-    : (otherUserLinkListData?.data ?? [])
+    ? (searchOtherUserLinks?.data?.contents ?? [])
+    : (otherUserLinkListData?.data?.contents ?? [])
 
   const tabs = categories?.data.map((category, index) => ({
     id: index,

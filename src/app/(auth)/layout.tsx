@@ -49,7 +49,7 @@ export default function AuthLayout({
 
         <main className="relative flex min-h-0 min-w-0 flex-1 pt-0 md:pt-24">
           <div
-            className={`relative flex min-h-0 min-w-0 flex-1 flex-col rounded-none bg-white transition-all duration-300 md:rounded-tl-[20px] ${isChatbotOpen && !isMyPage ? 'md:mr-[397px] md:rounded-tr-[20px]' : ''}`}
+            className={`relative flex min-h-0 min-w-0 flex-1 flex-col rounded-none bg-white transition-all duration-300 md:rounded-tl-[20px] ${isChatbotOpen && !isMyPage ? 'lg:mr-[397px] lg:rounded-tr-[20px]' : ''}`}
           >
             {children}
             {!isMyPage && !isDrawerOpen && (

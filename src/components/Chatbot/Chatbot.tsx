@@ -100,7 +100,7 @@ export default function Chatbot({ isOpen, onClose }: ChatbotProps) {
   if (!isOpen) return null
 
   return (
-    <div className="flex h-full w-full flex-col justify-between rounded-none bg-white p-[20px] md:h-[calc(100vh-24px)] md:w-[373px] md:rounded-tl-[20px]">
+    <div className="flex h-full w-full flex-col justify-between rounded-none bg-white p-[20px] lg:h-[calc(100vh-24px)] lg:w-[373px] lg:rounded-tl-[20px]">
       <ChatbotHeader onClose={onClose} />
 
       <div className="scrollbar-hide flex flex-1 flex-col gap-[20px] overflow-y-auto py-4">
