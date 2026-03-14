@@ -14,7 +14,7 @@ interface DrawerProps {
   onMoveLinkModalOpen: () => void
   categoryColor: string
   categoryName: string
-  isDefault?: boolean
+
   viewCount: number
   title: string
   defaultWhy: string
@@ -28,7 +28,7 @@ export function Drawer({
   onMoveLinkModalOpen,
   categoryColor,
   categoryName,
-  isDefault,
+
   viewCount,
   title,
   defaultWhy,
@@ -109,10 +109,12 @@ export function Drawer({
       </div>
 
       <div className="mb-[10px] flex shrink-0 items-center gap-8">
-        <div
-          className="rounded-4 h-[10px] w-[10px]"
-          style={{ backgroundColor: categoryColor }}
-        />
+        {categoryColor && (
+          <div
+            className="rounded-4 h-[10px] w-[10px]"
+            style={{ backgroundColor: categoryColor }}
+          />
+        )}
         <span className="text-caption-1">{categoryName}</span>
       </div>
 

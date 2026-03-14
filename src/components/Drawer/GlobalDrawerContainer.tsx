@@ -32,7 +32,6 @@ export function GlobalDrawerContainer() {
           onMoveLinkModalOpen={handleOpenMoveLinkModal}
           categoryColor={linkDetails?.reference?.colorCode ?? ''}
           categoryName={linkDetails?.reference?.title ?? ''}
-          isDefault={linkDetails?.reference?.isDefault ?? false}
           viewCount={linkDetails?.viewCount ?? 0}
           title={linkDetails?.title ?? ''}
           defaultWhy={linkDetails?.why ?? ''}
