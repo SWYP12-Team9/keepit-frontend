@@ -1,5 +1,6 @@
 'use client'
 
+import { LinkSseSubscriber } from '@/src/app/(auth)/_components/LinkSseSubscriber/LinkSseSubscriber'
 import { SaveLinkModal } from '@/src/components/Modal'
 import { OpenSaveLinkButton } from '@/src/components/OpenSaveLinkButton/OpenSaveLinkButton'
 import { Sidebar } from '@/src/components/Sidebar'
@@ -25,6 +26,7 @@ export default function AuthLayout({
 
   return (
     <div className="bg-blue-light flex h-dvh min-h-screen overflow-hidden">
+      <LinkSseSubscriber />
       <div className="hidden h-full md:block">
         <Sidebar />
       </div>

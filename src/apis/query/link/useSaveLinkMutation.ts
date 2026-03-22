@@ -1,18 +1,28 @@
 import { showErrorToast } from '@/src/utils/toast'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { AxiosError } from 'axios'
-import { requestPostSaveLink } from '../../request/requestPostSaveLink'
+import {
+  requestPostSaveLink,
+  RequestPostSaveLinkResponse,
+} from '../../request/requestPostSaveLink'
+import { usePendingLinkStore } from '@/src/store/pendingLinkStore'
 import { referenceKeys } from '../reference/referenceKeys'
-import { linkKeys } from './linkKeys'
 
 export const useSaveLinkMutation = () => {
   const queryClient = useQueryClient()
+  const addPendingLink = usePendingLinkStore((state) => state.addPendingLink)
 
   return useMutation({
     mutationFn: requestPostSaveLink,
-    onSuccess: (data) => {
+    onSuccess: (response: RequestPostSaveLinkResponse) => {
+      const savedLink = response.data
+
       queryClient.invalidateQueries({ queryKey: referenceKeys.lists() })
-      queryClient.invalidateQueries({ queryKey: linkKeys.lists() })
+
+      addPendingLink({
+        ...savedLink,
+        status: 'PROCESSING',
+      })
     },
     onError: (error: AxiosError) => {
       if (error.response?.status === 409) {

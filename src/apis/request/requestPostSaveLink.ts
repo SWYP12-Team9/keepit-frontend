@@ -1,3 +1,5 @@
+import { LinkItem } from '@/src/types/link/link'
+import { BaseResponse } from '@/src/types/response/response'
 import { axiosInstance } from '../instance/axiosInstance'
 
 interface BaseSaveLinkParams {
@@ -22,10 +24,17 @@ export type RequestPostSaveLinkParams =
   | ExistingReferenceParams
   | BaseSaveLinkParams
 
+export type RequestPostSaveLinkResponse = BaseResponse<
+  LinkItem & {
+    why: string
+    memo: string
+  }
+>
+
 export const requestPostSaveLink = async (
   params: RequestPostSaveLinkParams,
 ) => {
   const res = await axiosInstance.post('/user-links', params)
 
-  return res.data
+  return res.data as RequestPostSaveLinkResponse
 }

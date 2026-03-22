@@ -96,6 +96,9 @@ export default function Home() {
         linkList={linkList}
         isLoading={isSearchMode ? isSearchLinksLoading : isLinkListLoading}
         isSearchMode={isSearchMode}
+        referenceId={
+          selectedTab?.id === 'all' ? undefined : Number(selectedTab?.id)
+        }
       />
     </div>
   )

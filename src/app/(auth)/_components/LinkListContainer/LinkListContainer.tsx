@@ -1,8 +1,13 @@
 import { useDeleteLinkMutation } from '@/src/apis/query/link/useDeleteLinkMutation'
 import { EmptyLinks } from '@/src/components/EmptyLinks/EmptyLinks'
-import { MyLinkCard } from '@/src/components/LinkCard'
+import { MyLinkCard, PendingLinkCard } from '@/src/components/LinkCard'
 import { useOpenLinkDrawer } from '@/src/hooks/useOpenLinkDrawer'
+import {
+  PendingLinkItem,
+  usePendingLinkStore,
+} from '@/src/store/pendingLinkStore'
 import { LinkItem, SearchLinkItem } from '@/src/types/link/link'
+import { useEffect, useMemo, useRef, useState } from 'react'
 
 interface LinkListContainerProps {
   linkList: LinkItem[] | SearchLinkItem[]
@@ -10,6 +15,7 @@ interface LinkListContainerProps {
   isSearchMode: boolean
   showTitle?: boolean
   isReferenceDetail?: boolean
+  referenceId?: number
 }
 
 export function LinkListContainer({
@@ -18,9 +24,16 @@ export function LinkListContainer({
   isSearchMode,
   showTitle = true,
   isReferenceDetail = false,
+  referenceId,
 }: LinkListContainerProps) {
   const { mutateAsync: deleteLink } = useDeleteLinkMutation()
   const { openLinkDrawer } = useOpenLinkDrawer()
+  const pendingLinks = usePendingLinkStore((state) => state.pendingLinks)
+  const previousPendingIdsRef = useRef<Set<number>>(new Set())
+  const timeoutIdsRef = useRef<number[]>([])
+  const [animatingCompletedIds, setAnimatingCompletedIds] = useState<
+    Set<number>
+  >(new Set())
 
   const handleDelete = async (id: number) => {
     await deleteLink(id)
@@ -57,6 +70,65 @@ export function LinkListContainer({
   }
 
   const emptyProps = getEmptyStateProps()
+  const visiblePendingLinks = useMemo(
+    () =>
+      isSearchMode
+        ? []
+        : pendingLinks.filter((item) =>
+            referenceId ? item.reference?.id === referenceId : true,
+          ),
+    [isSearchMode, pendingLinks, referenceId],
+  )
+
+  const pendingIds = useMemo(
+    () => new Set(visiblePendingLinks.map((item) => item.id)),
+    [visiblePendingLinks],
+  )
+  const displayLinkList = isSearchMode
+    ? linkList
+    : [
+        ...visiblePendingLinks,
+        ...linkList.filter((item) => !pendingIds.has(item.id)),
+      ]
+
+  useEffect(() => {
+    const previousPendingIds = previousPendingIdsRef.current
+    const completedIds = [...previousPendingIds].filter(
+      (id) => !pendingIds.has(id),
+    )
+
+    if (completedIds.length) {
+      setAnimatingCompletedIds((currentIds) => {
+        const nextIds = new Set(currentIds)
+        completedIds.forEach((id) => nextIds.add(id))
+        return nextIds
+      })
+
+      completedIds.forEach((id) => {
+        const timeoutId = window.setTimeout(() => {
+          setAnimatingCompletedIds((currentIds) => {
+            const nextIds = new Set(currentIds)
+            nextIds.delete(id)
+            return nextIds
+          })
+        }, 520)
+
+        timeoutIdsRef.current.push(timeoutId)
+      })
+    }
+
+    previousPendingIdsRef.current = new Set(pendingIds)
+  }, [pendingIds])
+
+  useEffect(() => {
+    const timeoutIds = timeoutIdsRef.current
+
+    return () => {
+      timeoutIds.forEach((timeoutId) => {
+        window.clearTimeout(timeoutId)
+      })
+    }
+  }, [])
 
   const handleOpenLinkDetail = async (id: number) => {
     try {
@@ -68,7 +140,7 @@ export function LinkListContainer({
 
   return isLoading ? (
     <div className="pt-35 text-center">Loading...</div>
-  ) : linkList.length ? (
+  ) : displayLinkList.length ? (
     <div className="flex w-full flex-col gap-30 pt-23">
       {showTitle && (
         <span className="text-24 text-gray-default leading-28 font-semibold">
@@ -76,15 +148,26 @@ export function LinkListContainer({
         </span>
       )}
       <div className="flex flex-wrap gap-10">
-        {linkList.map((item: LinkItem | SearchLinkItem) => (
-          <div
-            key={item.id}
-            onClick={() => handleOpenLinkDetail(item.id)}
-            className="w-full min-w-0 sm:w-auto sm:flex-none"
-          >
-            <MyLinkCard data={item} onDelete={handleDelete} />
-          </div>
-        ))}
+        {displayLinkList.map((item) => {
+          const isProcessing = item.processingStatus === 'PENDING'
+          const shouldAnimateCompletion =
+            !isProcessing && animatingCompletedIds.has(item.id)
+          const wrapperClassName = `w-full min-w-0 sm:w-auto sm:flex-none ${shouldAnimateCompletion ? 'animate-in fade-in zoom-in-[0.99] slide-in-from-bottom-3 duration-500 ease-out' : ''}`
+
+          return isProcessing ? (
+            <div key={item.id} className={wrapperClassName}>
+              <PendingLinkCard data={item as PendingLinkItem} />
+            </div>
+          ) : (
+            <div
+              key={item.id}
+              onClick={() => handleOpenLinkDetail(item.id)}
+              className={wrapperClassName}
+            >
+              <MyLinkCard data={item} onDelete={handleDelete} />
+            </div>
+          )
+        })}
       </div>
     </div>
   ) : (
