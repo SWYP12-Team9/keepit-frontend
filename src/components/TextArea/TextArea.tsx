@@ -15,7 +15,7 @@ export function TextArea({
   return (
     <textarea
       className={cn(
-        'rounded-8 placeholder:text-gray-muted text-gray-default text-caption-1 resize-none bg-[#F2F2F2] px-20 py-14',
+        'rounded-8 placeholder:text-gray-muted text-gray-default text-caption-1 bg-gray-field resize-none px-20 py-14',
         width,
         height,
         className,

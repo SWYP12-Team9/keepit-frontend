@@ -245,6 +245,7 @@ export default function ReferenceDetails({
           isSearchMode={isSearchMode}
           showTitle={false}
           isReferenceDetail={true}
+          referenceId={currentFolderId}
         />
       </div>
       <CreateFolderModal

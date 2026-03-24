@@ -19,12 +19,20 @@ import { buildSaveLinkPayload } from '@/src/utils/buildSaveLinkPayload'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useEffect } from 'react'
 import { Controller, useForm, useWatch } from 'react-hook-form'
+import { usePendingLinkStore } from '@/src/store/pendingLinkStore'
 import { SaveLinkFormData } from './types'
 
 export function SaveLinkModal() {
   const isModalOpen = useSaveLinkModalStore((state) => state.isOpen)
   const close = useSaveLinkModalStore((state) => state.close)
   const urlValue = useSaveLinkModalStore((state) => state.url)
+  const pendingLinks = usePendingLinkStore((state) => state.pendingLinks)
+  const dismissCreationPopup = usePendingLinkStore(
+    (state) => state.dismissCreationPopup,
+  )
+  const isCreationPopupDismissed = usePendingLinkStore(
+    (state) => state.isCreationPopupDismissed,
+  )
 
   const { mutateAsync: saveLink, isPending } = useSaveLinkMutation()
   const { data: referenceList } = useGetReferenceList({ type: 'all' })
@@ -59,7 +67,7 @@ export function SaveLinkModal() {
 
   useEffect(() => {
     if (isModalOpen) setValue('url', urlValue)
-  }, [isModalOpen, urlValue])
+  }, [isModalOpen, setValue, urlValue])
 
   const selectedFolder = useWatch({
     control,
@@ -73,11 +81,14 @@ export function SaveLinkModal() {
     const validatedPayload = saveLinkRequestSchema.safeParse(payload)
 
     if (validatedPayload.success) {
-      saveLink(validatedPayload.data)
+      try {
+        await saveLink(validatedPayload.data)
+        close()
+        reset()
+      } catch {
+        return
+      }
     }
-
-    close()
-    reset()
   }
 
   return (
@@ -198,6 +209,7 @@ export function SaveLinkModal() {
             width="w-85"
             height="h-42"
             variant="secondary"
+            disabled={isPending}
             onClick={() => {
               close()
               reset()
@@ -205,12 +217,20 @@ export function SaveLinkModal() {
           >
             취소
           </Button>
-          <Button width="w-130" height="h-42" onClick={handleSubmit(onSubmit)}>
+          <Button
+            width="w-130"
+            height="h-42"
+            disabled={isPending}
+            onClick={handleSubmit(onSubmit)}
+          >
             저장
           </Button>
         </div>
       </Modal>
-      <CreationPopup isVisible={isPending} />
+      <CreationPopup
+        isVisible={pendingLinks.length > 0 && !isCreationPopupDismissed}
+        onClose={dismissCreationPopup}
+      />
     </>
   )
 }

@@ -1,34 +1,60 @@
 'use client'
 
-import { Suspense, use } from 'react'
-
-const mockingEnabledPromise =
-  process.env.NODE_ENV === 'development' && typeof window !== 'undefined'
-    ? import('../mocks/browser').then(async ({ worker }) => {
-        await worker.start({
-          onUnhandledRequest(request, print) {
-            if (request.url.includes('_next')) {
-              return
-            }
-            print.warning()
-          },
-        })
-      })
-    : Promise.resolve()
+import { usePathname } from 'next/navigation'
+import { useEffect, useState } from 'react'
 
 export default function MSWProvider({
   children,
 }: {
   children: React.ReactNode
 }) {
-  return (
-    <Suspense fallback={null}>
-      <MSWProviderWrapper>{children}</MSWProviderWrapper>
-    </Suspense>
-  )
-}
+  const pathname = usePathname()
+  const isTestRoute = pathname.startsWith('/test')
+  const [isReady, setIsReady] = useState(process.env.NODE_ENV !== 'development')
 
-function MSWProviderWrapper({ children }: { children: React.ReactNode }) {
-  use(mockingEnabledPromise)
-  return children
+  useEffect(() => {
+    if (process.env.NODE_ENV !== 'development') {
+      setIsReady(true)
+      return
+    }
+
+    let isCancelled = false
+
+    const syncWorker = async () => {
+      const { worker } = await import('../mocks/browser')
+
+      if (isTestRoute) {
+        await worker.start({
+          onUnhandledRequest(request, print) {
+            if (
+              request.url.includes('_next') ||
+              request.url.includes('/icons/') ||
+              request.url.includes('/images/')
+            ) {
+              return
+            }
+            print.warning()
+          },
+        })
+      } else {
+        worker.stop()
+      }
+
+      if (!isCancelled) {
+        setIsReady(true)
+      }
+    }
+
+    void syncWorker()
+
+    return () => {
+      isCancelled = true
+    }
+  }, [isTestRoute])
+
+  if (!isReady) {
+    return null
+  }
+
+  return <>{children}</>
 }

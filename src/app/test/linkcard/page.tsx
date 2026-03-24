@@ -18,6 +18,7 @@ const MOCK_MY_DATA_LIST = [
     url: 'https://example.com/article1',
     aiSummary:
       'GitHub Copilot CLI의 애니메이션 ASCII 배너가 어떻게 구현되었는지 공학적인 관점에서 상세히 설명합니다.',
+    processingStatus: 'READY' as const,
     status: 'READ' as const,
     viewCount: 128,
   },
@@ -33,6 +34,7 @@ const MOCK_MY_DATA_LIST = [
     url: 'https://example.com/article2',
     aiSummary:
       'Next.js 14 버전 이후의 캐싱 메커니즘을 이해하고 성능을 최적화하는 방법을 다룹니다.',
+    processingStatus: 'READY' as const,
     status: 'UNREAD' as const,
     viewCount: 5,
   },

@@ -9,24 +9,29 @@ import { ALL_TAB } from '@/src/constants/defaultTap'
 import { useDebounce } from '@/src/hooks/useDebounce'
 import { useAuthStore } from '@/src/store/authStore'
 import { usePathname, useRouter, useSearchParams } from 'next/navigation'
-import { useState } from 'react'
+import { Suspense, useEffect, useState } from 'react'
 import { SearchLinksInput } from '../_components/SearchLinksInput/SearchLinksInput'
 import { OtherUserLinksContainer } from './_components/OtherUserLinksContainer/OtherUserLinksContainer'
 
-export default function ExplorePage() {
+interface ExploreLoginModalProps {
+  isOpen: boolean
+  onOpenChange: (open: boolean) => void
+}
+
+function ExploreLoginModal({ isOpen, onOpenChange }: ExploreLoginModalProps) {
   const searchParams = useSearchParams()
   const pathname = usePathname()
   const router = useRouter()
   const { isLoggedIn } = useAuthStore()
 
-  const [selectedTab, setSelectedTab] = useState<Tab>(ALL_TAB)
-  const [searchKeyword, setSearchKeyword] = useState('')
-  const [isLoginModalOpen, setIsLoginModalOpen] = useState(
-    !isLoggedIn && searchParams.get('login') === 'true',
-  )
+  useEffect(() => {
+    if (!isLoggedIn && searchParams.get('login') === 'true') {
+      onOpenChange(true)
+    }
+  }, [isLoggedIn, onOpenChange, searchParams])
 
   const handleLoginModalChange = (open: boolean) => {
-    setIsLoginModalOpen(open)
+    onOpenChange(open)
     if (!open) {
       const params = new URLSearchParams(searchParams.toString())
       params.delete('login')
@@ -35,6 +40,14 @@ export default function ExplorePage() {
       )
     }
   }
+
+  return <LoginModal isOpen={isOpen} onOpenChange={handleLoginModalChange} />
+}
+
+export default function ExplorePage() {
+  const [selectedTab, setSelectedTab] = useState<Tab>(ALL_TAB)
+  const [searchKeyword, setSearchKeyword] = useState('')
+  const [isLoginModalOpen, setIsLoginModalOpen] = useState(false)
 
   const debouncedKeyword = useDebounce({
     value: searchKeyword,
@@ -116,10 +129,12 @@ export default function ExplorePage() {
         />
       </div>
 
-      <LoginModal
-        isOpen={isLoginModalOpen}
-        onOpenChange={handleLoginModalChange}
-      />
+      <Suspense fallback={null}>
+        <ExploreLoginModal
+          isOpen={isLoginModalOpen}
+          onOpenChange={setIsLoginModalOpen}
+        />
+      </Suspense>
     </main>
   )
 }

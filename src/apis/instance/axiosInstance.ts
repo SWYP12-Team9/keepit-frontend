@@ -1,6 +1,6 @@
 import { useAuthStore } from '@/src/store/authStore'
 import axios from 'axios'
-import { requestPostReissue } from '../request/requestPostReissue'
+import { requestRefreshAccessToken } from '../request/requestRefreshAccessToken'
 
 export const axiosInstance = axios.create({
   baseURL: process.env.NEXT_PUBLIC_BASE_URL,
@@ -69,14 +69,12 @@ axiosInstance.interceptors.response.use(
       isRefreshing = true
 
       try {
-        const res = await requestPostReissue({
-          body: { refreshToken },
-        })
+        const accessToken = await requestRefreshAccessToken()
 
-        const { accessToken, refreshToken: newRefreshToken } = res.data
-
-        localStorage.setItem('accessToken', accessToken)
-        localStorage.setItem('refreshToken', newRefreshToken)
+        if (!accessToken) {
+          processQueue(error)
+          return Promise.reject(error)
+        }
 
         processQueue(null, accessToken)
 
