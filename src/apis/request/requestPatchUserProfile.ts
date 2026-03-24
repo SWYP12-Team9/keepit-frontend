@@ -30,11 +30,7 @@ export const requestPatchUseProfile = async ({
     formData.append('backgroundImage', backgroundImage)
   }
 
-  const res = await axiosInstance.patch('/users/profile', formData, {
-    headers: {
-      'Content-Type': 'multipart/form-data',
-    },
-  })
+  const res = await axiosInstance.patch('/users/profile', formData)
 
   return res.data
 }

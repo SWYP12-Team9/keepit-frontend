@@ -1,5 +1,6 @@
 import localFont from 'next/font/local'
 import type { Viewport } from 'next'
+import { Suspense } from 'react'
 import './globals.css'
 
 import { UserInitializer } from './(auth)/_components/UserInitializer/UserInitializer'
@@ -45,7 +46,9 @@ export default function RootLayout({
         <Providers>
           <UserInitializer />
           {children}
-          <ProfileSetup />
+          <Suspense fallback={null}>
+            <ProfileSetup />
+          </Suspense>
         </Providers>
       </body>
     </html>

@@ -11,9 +11,10 @@ export function useOpenLinkDrawer() {
   const openDrawer = useDrawerStore((state) => state.open)
 
   const openLinkDrawer = async (id: number) => {
-    await queryClient.fetchQuery({
+    await queryClient.prefetchQuery({
       queryKey: linkKeys.detail(id),
       queryFn: () => requestGetLinkDetails(id),
+      staleTime: 0,
     })
 
     setLinkId(id)

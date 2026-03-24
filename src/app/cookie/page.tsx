@@ -1,32 +1,51 @@
 'use client'
 
-import { useJwtExchangeMutation } from '@/src/apis/query/auth/useJwtExchange'
+import { requestJwtExchange } from '@/src/apis/request/requestPostJwtExchange'
 import { requestGetUserInfoWithToken } from '@/src/apis/request/requestGetUserInfo'
 import { useAuthStore } from '@/src/store/authStore'
 import { AxiosError } from 'axios'
 import { useRouter, useSearchParams } from 'next/navigation'
-import { useEffect } from 'react'
+import { Suspense, useEffect, useRef } from 'react'
 
-export default function CookiePage() {
+function CookieLoadingState() {
+  return (
+    <div className="flex min-h-screen items-center justify-center">
+      <div className="text-center">
+        <p className="mb-2 text-lg font-medium">
+          로그인 정보를 확인 중입니다...
+        </p>
+        <p className="text-sm text-gray-500">잠시만 기다려 주세요.</p>
+      </div>
+    </div>
+  )
+}
+
+function CookiePageContent() {
   const router = useRouter()
   const searchParams = useSearchParams()
   const isNewUser = searchParams.get('isNewUser') === 'true'
 
   const { login, logout, setLoggedIn } = useAuthStore()
-  const { mutate: exchangeToken } = useJwtExchangeMutation()
+  const hasExchanged = useRef(false)
 
   useEffect(() => {
-    exchangeToken(undefined, {
-      onSuccess: async (tokenData) => {
-        localStorage.setItem('accessToken', tokenData.accessToken)
-        localStorage.setItem('refreshToken', tokenData.refreshToken)
+    if (hasExchanged.current) return
+    hasExchanged.current = true
+
+    const processLogin = async () => {
+      try {
+        const response = await requestJwtExchange()
+        const accessToken = response.data.accessToken
+        const refreshToken = response.data.refreshToken
+        localStorage.setItem('accessToken', accessToken)
+        localStorage.setItem('refreshToken', refreshToken)
 
         try {
           const fetchUserInfo = async () => {
             let lastError: unknown
             for (let attempt = 0; attempt < 5; attempt += 1) {
               try {
-                return await requestGetUserInfoWithToken(tokenData.accessToken)
+                return await requestGetUserInfoWithToken(accessToken)
               } catch (error) {
                 lastError = error
                 const status = (error as AxiosError)?.response?.status
@@ -73,21 +92,23 @@ export default function CookiePage() {
           logout()
           router.replace('/explore?login=true')
         }
-      },
-      onError: (error) => {
+      } catch (error) {
         console.error('토큰 교환 중 에러 발생:', error)
-      },
-    })
-  }, [exchangeToken, isNewUser, router, login, logout, setLoggedIn])
+        logout()
+        router.replace('/explore?login=true')
+      }
+    }
 
+    processLogin()
+  }, [isNewUser, router, login, logout, setLoggedIn])
+
+  return <CookieLoadingState />
+}
+
+export default function CookiePage() {
   return (
-    <div className="flex min-h-screen items-center justify-center">
-      <div className="text-center">
-        <p className="mb-2 text-lg font-medium">
-          로그인 정보를 확인 중입니다...
-        </p>
-        <p className="text-sm text-gray-500">잠시만 기다려 주세요.</p>
-      </div>
-    </div>
+    <Suspense fallback={<CookieLoadingState />}>
+      <CookiePageContent />
+    </Suspense>
   )
 }

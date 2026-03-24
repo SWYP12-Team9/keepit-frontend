@@ -177,4 +177,10 @@ body {
   body {
     @apply bg-background text-foreground;
   }
+  input:-webkit-autofill,
+  input:-webkit-autofill:hover,
+  input:-webkit-autofill:focus {
+    -webkit-box-shadow: 0 0 0 1000px #fafafa inset !important;
+    box-shadow: 0 0 0 1000px #fafafa inset !important;
+  }
 }

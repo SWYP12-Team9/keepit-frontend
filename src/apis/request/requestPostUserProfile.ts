@@ -30,11 +30,7 @@ export const requestPostUserProfile = async ({
     formData.append('backgroundImage', backgroundImage)
   }
 
-  const res = await axiosInstance.post('/users/profile/complete', formData, {
-    headers: {
-      'Content-Type': 'multipart/form-data',
-    },
-  })
+  const res = await axiosInstance.post('/users/profile/complete', formData)
 
   return res.data
 }
