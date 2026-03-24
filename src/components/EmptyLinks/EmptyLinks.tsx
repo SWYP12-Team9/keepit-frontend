@@ -12,6 +12,8 @@ export function EmptyLinks({
   imageProps,
   className,
 }: EmptyLinksProps) {
+  const { alt = '', ...restImageProps } = imageProps
+
   return (
     <div
       className={cn(
@@ -19,7 +21,7 @@ export function EmptyLinks({
         className,
       )}
     >
-      <Image {...imageProps} />
+      <Image alt={alt} {...restImageProps} />
       <span className="text-body-1 text-gray-default">{message}</span>
     </div>
   )
