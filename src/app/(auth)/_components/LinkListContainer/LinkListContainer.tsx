@@ -88,7 +88,11 @@ export function LinkListContainer({
     ? linkList
     : [
         ...visiblePendingLinks,
-        ...linkList.filter((item) => !pendingIds.has(item.id)),
+        ...linkList.filter(
+          (item) =>
+            !pendingIds.has(item.id) &&
+            (item.processingStatus === 'PENDING' || item.title?.trim()),
+        ),
       ]
 
   useEffect(() => {
