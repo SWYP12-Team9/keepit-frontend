@@ -198,6 +198,8 @@ async function syncCompletedLink(
 
 export function LinkSseSubscriber() {
   const isLoggedIn = useAuthStore((state) => state.isLoggedIn)
+  const user = useAuthStore((state) => state.user)
+  const hasCompletedProfile = Boolean(user?.nickname?.trim())
   const pendingLinks = usePendingLinkStore((state) => state.pendingLinks)
   const removePendingLink = usePendingLinkStore(
     (state) => state.removePendingLink,
@@ -205,7 +207,7 @@ export function LinkSseSubscriber() {
   const queryClient = useQueryClient()
 
   useEffect(() => {
-    if (!isLoggedIn) return
+    if (!isLoggedIn || !hasCompletedProfile) return
 
     let accessToken = localStorage.getItem('accessToken')
     const baseUrl = process.env.NEXT_PUBLIC_BASE_URL
@@ -370,7 +372,7 @@ export function LinkSseSubscriber() {
 
       abortController.abort()
     }
-  }, [isLoggedIn, queryClient, removePendingLink])
+  }, [isLoggedIn, hasCompletedProfile, queryClient, removePendingLink])
 
   useEffect(() => {
     if (!isLoggedIn || !pendingLinks.length) return
