@@ -84,16 +84,17 @@ export function LinkListContainer({
     () => new Set(visiblePendingLinks.map((item) => item.id)),
     [visiblePendingLinks],
   )
-  const displayLinkList = isSearchMode
-    ? linkList
-    : [
-        ...visiblePendingLinks,
-        ...linkList.filter(
-          (item) =>
-            !pendingIds.has(item.id) &&
-            (item.processingStatus === 'PENDING' || item.title?.trim()),
-        ),
-      ]
+  const displayLinkList: (PendingLinkItem | LinkItem | SearchLinkItem)[] =
+    isSearchMode
+      ? linkList
+      : [
+          ...visiblePendingLinks,
+          ...linkList.filter(
+            (item) =>
+              !pendingIds.has(item.id) &&
+              (item.processingStatus === 'PENDING' || item.title?.trim()),
+          ),
+        ]
 
   useEffect(() => {
     const previousPendingIds = previousPendingIdsRef.current
@@ -153,7 +154,7 @@ export function LinkListContainer({
       )}
       <div className="flex flex-wrap gap-10">
         {displayLinkList.map((item) => {
-          const isProcessing = item.processingStatus === 'PENDING'
+          const isProcessing = pendingIds.has(item.id)
           const shouldAnimateCompletion =
             !isProcessing && animatingCompletedIds.has(item.id)
           const wrapperClassName = `w-full min-w-0 sm:w-auto sm:flex-none ${shouldAnimateCompletion ? 'animate-in fade-in zoom-in-[0.99] slide-in-from-bottom-3 duration-500 ease-out' : ''}`
@@ -168,7 +169,7 @@ export function LinkListContainer({
               onClick={() => handleOpenLinkDetail(item.id)}
               className={wrapperClassName}
             >
-              <MyLinkCard data={item} onDelete={handleDelete} />
+              <MyLinkCard data={item as LinkItem} onDelete={handleDelete} />
             </div>
           )
         })}

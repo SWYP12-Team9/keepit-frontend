@@ -14,14 +14,15 @@ export const useSaveLinkMutation = () => {
 
   return useMutation({
     mutationFn: requestPostSaveLink,
-    onSuccess: (response: RequestPostSaveLinkResponse) => {
+    onSuccess: (response: RequestPostSaveLinkResponse, variables) => {
       const savedLink = response.data
 
       queryClient.invalidateQueries({ queryKey: referenceKeys.lists() })
 
       addPendingLink({
-        ...savedLink,
-        status: 'PROCESSING',
+        id: savedLink.id,
+        reference: savedLink.reference,
+        url: variables.url,
       })
     },
     onError: (error: AxiosError) => {

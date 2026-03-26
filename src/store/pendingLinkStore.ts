@@ -1,10 +1,14 @@
-import { LinkItem } from '@/src/types/link/link'
 import { create } from 'zustand'
 
-export interface PendingLinkItem extends LinkItem {
-  status: 'PROCESSING'
-  why?: string
-  memo?: string
+export interface PendingLinkItem {
+  id: number
+  reference: {
+    id: number
+    title: string
+    colorCode: string
+    isDefault: boolean
+  }
+  url: string
   createdAt: number
 }
 
