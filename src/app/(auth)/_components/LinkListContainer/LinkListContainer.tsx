@@ -154,7 +154,9 @@ export function LinkListContainer({
       )}
       <div className="flex flex-wrap gap-10">
         {displayLinkList.map((item) => {
-          const isProcessing = pendingIds.has(item.id)
+          const isProcessing =
+            pendingIds.has(item.id) ||
+            ('processingStatus' in item && item.processingStatus === 'PENDING')
           const shouldAnimateCompletion =
             !isProcessing && animatingCompletedIds.has(item.id)
           const wrapperClassName = `w-full min-w-0 sm:w-auto sm:flex-none ${shouldAnimateCompletion ? 'animate-in fade-in zoom-in-[0.99] slide-in-from-bottom-3 duration-500 ease-out' : ''}`
