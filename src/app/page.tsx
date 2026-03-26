@@ -3,8 +3,20 @@
 import { cn } from '@/src/utils/cn'
 import Image from 'next/image'
 import Link from 'next/link'
+import { useEffect } from 'react'
+import { useRouter } from 'next/navigation'
 
 export default function LandingPage() {
+  const router = useRouter()
+
+  useEffect(() => {
+    const accessToken = localStorage.getItem('accessToken')
+
+    if (accessToken) {
+      router.replace('/home')
+    }
+  }, [router])
+
   const handleLogin = (provider: string) => {
     // Check if window is defined (client-side) to avoid SSR errors, though 'use client' handles this.
     if (typeof window !== 'undefined') {

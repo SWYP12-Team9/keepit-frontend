@@ -6,12 +6,15 @@ import { OpenSaveLinkButton } from '@/src/components/OpenSaveLinkButton/OpenSave
 import { Sidebar } from '@/src/components/Sidebar'
 import ChatbotContainer from '@/src/components/Chatbot/ChatbotContainer'
 import Image from 'next/image'
-import { usePathname } from 'next/navigation'
-import { useState } from 'react'
+import { usePathname, useRouter } from 'next/navigation'
+import { useEffect, useState } from 'react'
 import ChatbotButton from '@/src/components/Chatbot/ChatbotButton'
 import { useChatbotStore } from '@/src/store/chatbotStore'
 import { useDrawerStore } from '@/src/store/drawerStore'
 import { GlobalDrawerContainer } from '@/src/components/Drawer/GlobalDrawerContainer'
+import { useAuthStore } from '@/src/store/authStore'
+
+const PROTECTED_ROUTES = ['/home', '/mypage', '/reference']
 
 export default function AuthLayout({
   children,
@@ -19,10 +22,23 @@ export default function AuthLayout({
   children: React.ReactNode
 }) {
   const pathname = usePathname()
+  const router = useRouter()
+  const isLoggedIn = useAuthStore((state) => state.isLoggedIn)
   const isMyPage = pathname === '/mypage'
   const [isMobileSidebarOpen, setIsMobileSidebarOpen] = useState(false)
   const isChatbotOpen = useChatbotStore((state) => state.isOpen)
   const isDrawerOpen = useDrawerStore((state) => state.isOpen)
+
+  useEffect(() => {
+    const hasToken = localStorage.getItem('accessToken')
+    const isProtected = PROTECTED_ROUTES.some((route) =>
+      pathname.startsWith(route),
+    )
+
+    if (!hasToken && !isLoggedIn && isProtected) {
+      router.replace('/explore?login=true')
+    }
+  }, [pathname, isLoggedIn, router])
 
   return (
     <div className="bg-blue-light flex h-dvh min-h-screen overflow-hidden">
